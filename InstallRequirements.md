@@ -1,4 +1,4 @@
-First of all, you have to install pip: sudo apt install python3-pip\n
+First of all, you have to install pip: sudo apt install python3-pip <br/>
 Then, update your pip packages to newest version: pip install pip --upgrade
 
 # Install dependencies package
