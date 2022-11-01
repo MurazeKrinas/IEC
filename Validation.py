@@ -10,14 +10,14 @@ import timeit
 CFG = {
     'fold_num': 5,
     'seed': 719,
-    'model_arch': 'tf_efficientnet_b4_ns',
+    #'model_arch': 'tf_efficientnet_b4_ns',
     #'model_arch': 'vit_base_patch16_224',
-    #'model_arch': 'deit_base_patch16_224',
+    'model_arch': 'deit_base_patch16_224',
     #'model_arch': 'cait_s24_224',
     #'model_arch': 'convit_tiny',
-    #'model_arch': 'tf_efficientnet_b4',
     #'model_arch': 'inception_v4',
     #'model_arch': 'resnet50',
+    #'model_arch': 'coat_tiny',
     #'model_arch': 'resmlp_12_224',
     #'model_arch': 'gmlp_s16_224',
     #'model_arch': 'mixer_b16_224_in21k',
@@ -43,8 +43,8 @@ class CassvaImgClassifier(nn.Module):
         self.model = timm.create_model(model_arch, pretrained=pretrained)
 
         #1 efficientNet initilization
-        n_features = self.model.classifier.in_features
-        self.model.classifier = nn.Linear(n_features, n_class)
+        #n_features = self.model.classifier.in_features
+        #self.model.classifier = nn.Linear(n_features, n_class)
         
         #2 inceptionv4 initilization        
         #n_features = self.model.num_features
@@ -59,7 +59,7 @@ class CassvaImgClassifier(nn.Module):
         #self.head = nn.Linear(n_features, n_class)  
         
         #ViT, Deit, CaiT, Coat, ConViT initilization
-        #self.model.head = nn.Linear(self.model.head.in_features, n_class)
+        self.model.head = nn.Linear(self.model.head.in_features, n_class)
         
     def forward(self, x):
         x = self.model(x)
@@ -68,7 +68,7 @@ class CassvaImgClassifier(nn.Module):
 print('Start loading model...')
 device = torch.device(CFG['device'])
 model = CassvaImgClassifier(CFG['model_arch'], 4, pretrained=True).to(device)
-model.load_state_dict(torch.load('./trained_model/tf_efficientnet_b4_fold_0_0.zip'))
+model.load_state_dict(torch.load('./trained_model/deit_base_patch16_224_fold_0_0'))
 print('Load model successfull!')
 
 print('\nStart load dataset...')
@@ -79,7 +79,7 @@ transform_norm = transforms.Compose([transforms.Resize((224,224)), transforms.To
 dataset = datasets.ImageFolder('./Dataset/test_images/', transform=transform_norm)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
 print('Load dataset successfull!')
-
+ss
 print('\nStart validation...')
 cnt = Avg = 0
 for images in dataloader:    
@@ -99,6 +99,6 @@ for images in dataloader:
 print('\n=> Time of', CFG['model_arch'],':', Avg)
 
 f = open("Benmark.txt", "a")
-s = 'Time of ' + CFG['model_arch'] + ': ' + str(Avg) + ' (second)'
+s = '\nTime of ' + CFG['model_arch'] + ': ' + str(Avg) + ' (second)\n'
 f.write(s)
 f.close()

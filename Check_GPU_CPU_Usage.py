@@ -34,7 +34,8 @@ if __name__ == '__main__':
         avgGpu = sum(gpuStats) / len(gpuStats)
         avgCpu = sum(cpuStats) / len(cpuStats)
         
-        with open('./IEC/Benmark.txt', 'a') as Benmark:
+        with open('./Benmark.txt', 'a') as Benmark:
             Benmark.write(f'Avg GPU: {avgGpu:.3f}%,\tAvg CPU: {avgCpu:.3f}%\n')
+        print(f'Avg GPU: {avgGpu:.3f}%,\tAvg CPU: {avgCpu:.3f}%\n')
         #print(f'GPU stats: {gpuStats}')
         #print(f'CPU stats: {cpuStats}')
