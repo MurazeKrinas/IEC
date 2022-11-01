@@ -46,7 +46,7 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load('./trained_model/Resnet50_CornDataset'))
     print('Load model successfull!')	
     
-    '''
+    
     for fold, (trn_idx, val_idx) in enumerate(IEC.folds):
         if fold > 0:
             break
@@ -61,4 +61,3 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 IEC.valid_one_epoch(0, fold, epoch, model, loss_fn, val_loader, device, scheduler=None, schd_loss_update=False)
-'''
