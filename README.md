@@ -1,31 +1,12 @@
-# train-iec-models
-### How to run this repository.
-1. Clone this repository: !git clone https://github.com/iec2-uit/iec-models
-2. **cd** into `train-iec-models` and install dependencies package: `pip install -r requirements.txt` 
-or run this: 
+# This is just a small project...
+I'm doing a scientific research project and here are the codes written by me and my teacher (mostly my teacher 😆). Thanks for visiting! If possible, why don't you try finding how to run those codes. Belive me, It's so interesting! 👽 <br/> <br/>
+First of all, you have to install pip: sudo apt install python3-pip <br/>
+Then, update your pip packages to newest version: pip install pip --upgrade
 
-* !pip3 install timm
-* !pip3 install pydicom
-* !pip3 install git+https://github.com/albumentations-team/albumentations
-* !pip3 install catalyst
-* !pip install -U albumentations
-
-3. run `python3 main.py` for deafault parameters or you can customize by call class IEC like: 
-
-* IEC.download('name datasets')
-=> These are 5 datasets you can download by type(still update more):
-1. Corn Disease Dataset => IEC.download('Corn Dataset')
-2. Wheat Disease Detection Dataset => 'Wheat Dataset'
-3. Rice Leaf Disease Image Samples Dataset => 'Wheat Dataset'
-4. The Potato Leaf Dataset => 'Potato Dataset'
-5. iCassava 2019 Dataset => 'iCassava Dataset'
-
-* IEC.seed_everything(IEC.CFG['seed'])
-=> Function that sets seed for pseudo-random number generators
-* IEC.folds
-=> Split dataset into k consecutive folds
-* IEC.preprare_dataloader()
-* IEC.train_one_epoch()
-* IEC.valid_one_epoch()
-
-https://colab.research.google.com/drive/13WWKR97NsVPYmJOa_ojecC6aVdaO1WXk?usp=sharing
+# Install dependencies package
+  * Torch 1.6 and Torchvision 0.7 (Using jetson-inference to install)
+  * pip3 install pillow==8.4
+  * pip3 install timm==0.6.5
+  * pip3 install pydicom
+  * pip3 install catalyst
+  * pip3 install albumentations

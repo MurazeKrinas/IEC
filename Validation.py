@@ -79,7 +79,6 @@ transform_norm = transforms.Compose([transforms.Resize((224,224)), transforms.To
 dataset = datasets.ImageFolder('./Dataset/test_images/', transform=transform_norm)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
 print('Load dataset successfull!')
-
 print('\nStart validation...')
 cnt = Avg = 0
 for images in dataloader:    
