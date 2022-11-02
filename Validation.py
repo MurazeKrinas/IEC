@@ -33,6 +33,10 @@ CFG = {
     'accum_iter': 2, # suppoprt to do batch accumulation for backprop with effectively larger batch size
     'verbose_step': 1,
     'device': 'cuda:0'
+<<<<<<< HEAD
+=======
+  #  'device': 'cpu'
+>>>>>>> bbcbad7440ab679b951e63144001e8b3412d20eb
 }
 
 class CassvaImgClassifier(nn.Module):
@@ -49,26 +53,41 @@ class CassvaImgClassifier(nn.Module):
         #self.last_linear = nn.Linear(n_features, n_class)
         
         #3 resnet50 initilization        
+<<<<<<< HEAD
         n_features = self.model.num_features
         self.fc = nn.Linear(n_features, n_class)
+=======
+        #n_features = self.model.num_features
+        #self.fc = nn.Linear(n_features, n_class)
+>>>>>>> bbcbad7440ab679b951e63144001e8b3412d20eb
         
         #4 MLP-mixer, gmlp_s16_224, ResMLP initilization        
         #n_features = self.model.num_features
         #self.head = nn.Linear(n_features, n_class)  
         
         #ViT, Deit, CaiT, Coat, ConViT initilization
+<<<<<<< HEAD
         #self.model.head = nn.Linear(self.model.head.in_features, n_class)
+=======
+        self.model.head = nn.Linear(self.model.head.in_features, n_class)
+>>>>>>> bbcbad7440ab679b951e63144001e8b3412d20eb
         
     def forward(self, x):
         x = self.model(x)
         return x
 
 print('Start loading model...')
+<<<<<<< HEAD
 PATH = f'./trained_model/{CFG["model_arch"]}'
 device = torch.device(CFG['device'])
 
 model = CassvaImgClassifier(CFG['model_arch'], 4, pretrained=True).to(device)
 model.load_state_dict(torch.load(PATH))
+=======
+device = torch.device(CFG['device'])
+model = CassvaImgClassifier(CFG['model_arch'], 4, pretrained=True).to(device)
+model.load_state_dict(torch.load('./trained_model/deit_base_patch16_224_fold_0_0'))
+>>>>>>> bbcbad7440ab679b951e63144001e8b3412d20eb
 print('Load model successfull!')
 
 print('\nStart load dataset...')
@@ -79,6 +98,10 @@ transform_norm = transforms.Compose([transforms.Resize((224,224)), transforms.To
 dataset = datasets.ImageFolder('./Dataset/test_images/', transform=transform_norm)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
 print('Load dataset successfull!')
+<<<<<<< HEAD
+=======
+ss
+>>>>>>> bbcbad7440ab679b951e63144001e8b3412d20eb
 print('\nStart validation...')
 cnt = Avg = 0
 for images in dataloader:    
