@@ -44,10 +44,14 @@ if __name__ == '__main__':
     print(train.head())
     
     IEC.folds = StratifiedKFold(n_splits=IEC.CFG['fold_num'], shuffle=True, random_state=IEC.CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
+    
+    print('Start loading model...')
+    PATH = f'./trained_model/{IEC.CFG["model_arch"]}'
     device = torch.device(IEC.CFG['device'])
-    print(device)
-        
-    model = CassvaImgClassifier(IEC.CFG['model_arch'], train.label.nunique()).to(device)
+
+    model = CassvaImgClassifier(IEC.CFG['model_arch'], 4, pretrained=True).to(device)
+    model.load_state_dict(torch.load(PATH))
+    print('Load model successfull!')
     
     for fold, (trn_idx, val_idx) in enumerate(IEC.folds):
         # we'll train fold 0 first

@@ -56,12 +56,21 @@ class IEC(Dataset):
     CFG = {
     'fold_num': 4,
     'seed': 719,
+    #'model_arch': 'tf_efficientnet_b4',
+    #'model_arch': 'vit_base_patch16_224',
+    #'model_arch': 'deit_base_patch16_224', #ERROR
+    #'model_arch': 'cait_s24_224', #ERROR
+    #'model_arch': 'convit_tiny', #ERROR
+    #'model_arch': 'inception_v4',
     'model_arch': 'resnet50',
-    #'img_size': 512,
+    #'model_arch': 'coat_tiny',
+    #'model_arch': 'resmlp_12_224', #ERROR
+    #'model_arch': 'gmlp_s16_224',
+    #'model_arch': 'mixer_b16_224_in21k',
     'img_size': 224,
     'epochs': 1,
     'train_bs': 32,
-    'valid_bs': 1,
+    'valid_bs': 32,
     'T_0': 10,
     'lr': 1e-4,
     'min_lr': 1e-6,
@@ -70,7 +79,6 @@ class IEC(Dataset):
     'accum_iter': 2, # suppoprt to do batch accumulation for backprop with effectively larger batch size
     'verbose_step': 1,
     'device': 'cuda:0'
-  #  'device': 'cpu'
 }
 
     def rand_bbox(size, lam):

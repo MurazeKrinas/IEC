@@ -38,13 +38,16 @@ if __name__ == '__main__':
     
     IEC.seed_everything(IEC.CFG['seed'])
     IEC.folds = StratifiedKFold(n_splits=IEC.CFG['fold_num'], shuffle=True, random_state=IEC.CFG['seed']).split(np.arange(valid.shape[0]), valid.label.values)
-    device = torch.device(IEC.CFG['device'])
-    print(device)
     
-    print('Load model')
-    model = CassvaImgClassifier(IEC.CFG['model_arch'], valid.label.nunique(), pretrained=True).to(device)
-    model.load_state_dict(torch.load('./trained_model/Resnet50_CornDataset'))
-    print('Load model successfull!')	
+    print('Start loading model...')
+    #PATH = f'./trained_model/{IEC.CFG["model_arch"]}'
+    PATH = f'./trained_model/Resnet50_CornDataset'
+    device = torch.device(IEC.CFG['device'])
+
+    model = CassvaImgClassifier(IEC.CFG['model_arch'], 4, pretrained=True).to(device)
+    model.load_state_dict(torch.load(PATH))
+    print('Load model successfull!')
+    
     
     for fold, (trn_idx, val_idx) in enumerate(IEC.folds):
         if fold > 0:
