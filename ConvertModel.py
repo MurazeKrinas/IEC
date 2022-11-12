@@ -6,17 +6,19 @@ import os
 import time
 
 CFG = {
-    #'model_arch': 'tf_efficientnet_b4',
-    #'model_arch': 'vit_base_patch16_224',
-    #'model_arch': 'deit_base_patch16_224', #ERROR
-    #'model_arch': 'cait_s24_224', #ERROR
-    #'model_arch': 'convit_tiny', #ERROR
-    #'model_arch': 'inception_v4',
-    #'model_arch': 'resnet50',
-    #'model_arch': 'coat_tiny',
-    #'model_arch': 'resmlp_12_224', #ERROR
-    #'model_arch': 'gmlp_s16_224',
-    #'model_arch': 'mixer_b16_224_in21k',
+    #'model_arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
+    #'model_arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
+
+    #'model_arch': 'cait_s24_224', #OK (Opset = 11)
+    #'model_arch': 'coat_tiny', #OK (Opset = 10)
+    #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
+    #'model_arch': 'inception_v4', #OK (Opset = 11)
+    #'model_arch': 'resnet50', #OK (Opset = 11)
+    
+    #'model_arch': 'mixer_b16_224_in21k', #Not enough memory
+    #'model_arch': 'deit_base_patch16_224', #Not enough memory 
+    #'model_arch': 'vit_base_patch16_224', #Not enough memory 
+    #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
     'device': 'cuda:0'
 }
 
@@ -42,7 +44,7 @@ class CassvaImgClassifier(nn.Module):
         #self.head = nn.Linear(n_features, n_class)  
         
         #ViT, Deit, CaiT, Coat, ConViT initilization
-        self.model.head = nn.Linear(self.model.head.in_features, n_class)
+        #self.model.head = nn.Linear(self.model.head.in_features, n_class)
         
     def forward(self, x):
         x = self.model(x)
@@ -62,16 +64,14 @@ BATCH_SIZE = 1
 dummy_input=torch.randn(BATCH_SIZE, 3, 224, 224).to(device)
 
 Output = './ONNXModels/' + CFG['model_arch'] + '.onnx'
-torch.onnx.export(model, dummy_input, Output, verbose=False)
-#torch.onnx.export(model, dummy_input, Output, opset_version=11, verbose=False) #opset_version=11 for efficientnet
+#For Coat_tiny
+#torch.onnx.export(model, dummy_input, Output, opset_version=10, verbose=False)
+
+#For ConViT, Efficientnet, Resnet50, Inception, Gmlp, CaiT
+#torch.onnx.export(model, dummy_input, Output, opset_version=11, verbose=False)
 print('Convert model to ONNX successfully!')
 
-'''
-time.sleep(10)
-
-print('Start converting model to TRT...')
+print('Convert to TRT...')
 COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt'
-os.system(COMMAND)
-print('Convert model to TRT successfully!')
-'''
+print(COMMAND)
 
