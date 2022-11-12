@@ -11,12 +11,12 @@ CFG = {
     'fold_num': 5,
     'seed': 719,
     #'model_arch': 'tf_efficientnet_b4',
-    #'model_arch': 'vit_base_patch16_224',
+    'model_arch': 'vit_base_patch16_224',
     #'model_arch': 'deit_base_patch16_224', #ERROR
     #'model_arch': 'cait_s24_224', #ERROR
     #'model_arch': 'convit_tiny', #ERROR
     #'model_arch': 'inception_v4',
-    'model_arch': 'resnet50',
+    #'model_arch': 'resnet50',
     #'model_arch': 'coat_tiny',
     #'model_arch': 'resmlp_12_224', #ERROR
     #'model_arch': 'gmlp_s16_224',
@@ -49,15 +49,15 @@ class CassvaImgClassifier(nn.Module):
         #self.last_linear = nn.Linear(n_features, n_class)
         
         #3 resnet50 initilization        
-        n_features = self.model.num_features
-        self.fc = nn.Linear(n_features, n_class)
+        #n_features = self.model.num_features
+        #self.fc = nn.Linear(n_features, n_class)
         
         #4 MLP-mixer, gmlp_s16_224, ResMLP initilization        
         #n_features = self.model.num_features
         #self.head = nn.Linear(n_features, n_class)  
         
         #ViT, Deit, CaiT, Coat, ConViT initilization
-        #self.model.head = nn.Linear(self.model.head.in_features, n_class)
+        self.model.head = nn.Linear(self.model.head.in_features, n_class)
         
     def forward(self, x):
         x = self.model(x)
@@ -67,7 +67,7 @@ print('Start loading model...')
 PATH = f'./TRTModels/{CFG["model_arch"]}.trt'
 device = torch.device(CFG['device'])
 
-model = CassvaImgClassifier(CFG['model_arch'], 4, pretrained=True).to(device)
+model = CassvaImgClassifier(CFG['model_arch'], 4, pretrained=False).to(device)
 model.load_state_dict(torch.load(PATH))
 
 print('Load model successfull!')
