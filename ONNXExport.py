@@ -66,10 +66,12 @@ torch.onnx.export(model, dummy_input, Output, verbose=False)
 #torch.onnx.export(model, dummy_input, Output, opset_version=11, verbose=False) #opset_version=11 for efficientnet
 print('Convert model to ONNX successfully!')
 
+'''
 time.sleep(10)
 
 print('Start converting model to TRT...')
 COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt'
 os.system(COMMAND)
 print('Convert model to TRT successfully!')
+'''
 
