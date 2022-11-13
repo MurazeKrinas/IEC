@@ -10,3 +10,6 @@ Then, update your pip packages to newest version: pip install pip --upgrade
   * pip3 install pydicom
   * pip3 install catalyst
   * pip3 install albumentations
+
+# Install tensorflow to work with TRT models
+  https://qengineering.eu/install-tensorflow-2.4.0-on-jetson-nano.html
