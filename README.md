@@ -1,3 +1,27 @@
+```console
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    NAM MÔ A DI ĐÀ PHẬT...CHÚA PHÙ HỘ CON...
+CODE KHÔNG BUG, CODE LUÔN CHẠY, CODE KHÔNG CRASH
+```
 # This is just a small project...
 I'm doing a scientific research project and here are the codes written by me and my teacher (mostly my teacher 😆). Thanks for visiting! If possible, why don't you try finding how to run those codes. Belive me, It's so interesting! 👽 <br/> <br/>
 First of all, you have to install pip: sudo apt install python3-pip <br/>
