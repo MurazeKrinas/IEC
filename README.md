@@ -1,3 +1,29 @@
+```console
+
+                                      _oo0oo_
+                                     o8888888o
+                                     88" . "88
+                                     (| -_- |)
+                                     0\  =  /0
+                                   ___/`---'\___
+                                 .' \\|     |// '.
+                                / \\|||  :  |||// \
+                               / _||||| -:- |||||- \
+                              |   | \\\  -  /// |   |
+                              | \_|  ''\---/''  |_/ |
+       _=_                    \  .-\__  '-'  ___/-. /                   _=_
+     q(-_-)p                ___'. .'  /--.--\  `. .'___               q(-_-)p
+     '_) (_`             ."" '<  `.___\_<|>_/___.' >' "".             '_) (_`
+     /__/  \            | | :  `- \`.;`\ _ /`;.`/ - ` : | |           /__/  \
+   _(<_   / )_          \  \ `_.   \_ __\ /__ _/   .-` /  /         _(<_   / )_
+  (__\_\_|_/__)     =====`-.____`.___ \_____/___.-`___.-'=====     (__\_\_|_/__) 
+                                      `=---='
+                                      
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     NAM MÔ A DI ĐÀ PHẬT...CHÚA PHÙ HỘ CON...
+                 CODE KHÔNG BUG, CODE LUÔN CHẠY, CODE KHÔNG CRASH
+                 
+```
 # This is just a small project...
 I'm doing a scientific research project and here are the codes written by me and my teacher (mostly my teacher 😆). Thanks for visiting! If possible, why don't you try finding how to run those codes. Belive me, It's so interesting! 👽 <br/> <br/>
 First of all, you have to install pip: sudo apt install python3-pip <br/>

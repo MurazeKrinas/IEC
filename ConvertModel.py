@@ -55,7 +55,7 @@ print('Start loading model...')
 device = torch.device(CFG['device'])
 model = CassvaImgClassifier(CFG['model_arch'], 4, pretrained=True).to(device)
 
-PATH = './trained_model/' + CFG['model_arch']
+PATH = f'./trained_model/{CFG["model_arch"]}'
 model.load_state_dict(torch.load(PATH))
 model.eval()
 print('Load model successfull!')
@@ -63,7 +63,7 @@ print('Load model successfull!')
 BATCH_SIZE = 1
 dummy_input=torch.randn(BATCH_SIZE, 3, 224, 224).to(device)
 
-Output = './ONNXModels/' + CFG['model_arch'] + '.onnx'
+Output = f'./ONNXModels/{CFG["model_arch"]}.onnx'
 #For Coat_tiny
 #torch.onnx.export(model, dummy_input, Output, opset_version=10, verbose=False)
 
