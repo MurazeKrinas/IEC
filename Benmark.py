@@ -1,3 +1,4 @@
+import os
 import torch
 from torch import nn
 import torchvision
@@ -37,7 +38,7 @@ def load_engine(engine_file_path):
 
 print('Start loading model...')
 PATH = f'./TRTModels/{CFG["model_arch"]}.trt'
-model = load_engine(PATH)
+...
 print('Load model successfull!')
 
 '''
