@@ -10,7 +10,7 @@ CFG = {
     #'model_arch': 'coat_tiny', #OK (Opset = 10)
     #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
     #'model_arch': 'inception_v4', #OK (Opset = 11)
-    'model_arch': 'resnet50', #OK (Opset = 11)
+    #'model_arch': 'resnet50', #OK (Opset = 11)
     
     #'model_arch': 'mixer_b16_224_in21k', #Not enough memory
     #'model_arch': 'deit_base_patch16_224', #Not enough memory 
@@ -32,8 +32,8 @@ class CassvaImgClassifier(nn.Module):
         # self.last_linear = nn.Linear(n_features, n_class)
         
         #3 resnet50 initilization        
-        n_features = self.model.num_features
-        self.fc = nn.Linear(n_features, n_class)
+        # n_features = self.model.num_features
+        # self.fc = nn.Linear(n_features, n_class)
         
         #4 MLP-mixer, gmlp_s16_224, ResMLP initilization        
         # n_features = self.model.num_features
