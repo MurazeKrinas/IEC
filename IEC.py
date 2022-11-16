@@ -56,17 +56,19 @@ class IEC(Dataset):
     CFG = {
     'fold_num': 4,
     'seed': 719,
-    #'model_arch': 'tf_efficientnet_b4',
-    #'model_arch': 'vit_base_patch16_224',
-    #'model_arch': 'deit_base_patch16_224', #ERROR
-    #'model_arch': 'cait_s24_224', #ERROR
-    #'model_arch': 'convit_tiny', #ERROR
-    #'model_arch': 'inception_v4',
-    'model_arch': 'resnet50',
-    #'model_arch': 'coat_tiny',
-    #'model_arch': 'resmlp_12_224', #ERROR
-    #'model_arch': 'gmlp_s16_224',
-    #'model_arch': 'mixer_b16_224_in21k',
+    #'model_arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
+    #'model_arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
+
+    #'model_arch': 'cait_s24_224', #OK (Opset = 11)
+    #'model_arch': 'coat_tiny', #OK (Opset = 10)
+    #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
+    #'model_arch': 'inception_v4', #OK (Opset = 11)
+    #'model_arch': 'resnet50', #OK (Opset = 11)
+    #'model_arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
+    #'model_arch': 'deit_base_patch16_224', #OK (Opset = 11)
+    #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
+    
+    #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
     'img_size': 224,
     'epochs': 1,
     'train_bs': 32,
