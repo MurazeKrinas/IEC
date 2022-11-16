@@ -12,10 +12,10 @@ CFG = {
     #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
     #'model_arch': 'inception_v4', #OK (Opset = 11)
     #'model_arch': 'resnet50', #OK (Opset = 11)
+    #'model_arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
+    #'model_arch': 'deit_base_patch16_224', #OK (Opset = 11)
+    #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
     
-    #'model_arch': 'mixer_b16_224_in21k', #Not enough memory
-    #'model_arch': 'deit_base_patch16_224', #Not enough memory 
-    #'model_arch': 'vit_base_patch16_224', #Not enough memory 
     #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
     'device': 'cuda:0'
 }
@@ -40,10 +40,9 @@ if __name__ == '__main__':
 
     Output = f'./ONNXModels/{CFG["model_arch"]}.onnx'
     #For Coat_tiny
-    #torch.onnx.export(model, dummy_input, Output, opset_version=10, verbose=False)
+    #torch.onnx.export(model, dummy_input, Output, opset_version=10, verbose=True)
 
-    #For ConViT, Efficientnet, Resnet50, Inception, Gmlp, CaiT
-    torch.onnx.export(model, dummy_input, Output, opset_version=11, verbose=False)
+    torch.onnx.export(model, dummy_input, Output, opset_version=11, verbose=True)
     print('Convert model to ONNX successfully!')
 
     print('Convert to TRT...')
