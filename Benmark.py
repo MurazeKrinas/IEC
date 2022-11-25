@@ -1,10 +1,5 @@
 import torch
-from torch import nn
-import torchvision
-from torchvision import transforms
-from torchvision import datasets
 from torchvision.transforms import Normalize
-from PIL import Image
 import timeit
 import pycuda.driver as cuda
 import pycuda.autoinit
