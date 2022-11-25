@@ -11,7 +11,7 @@ CFG = {
     #'model_arch': 'coat_tiny', #OK (Opset = 10)
     #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
     #'model_arch': 'inception_v4', #OK (Opset = 11)
-    #'model_arch': 'resnet50', #OK (Opset = 11)
+    'model_arch': 'resnet50', #OK (Opset = 11)
     #'model_arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
     #'model_arch': 'deit_base_patch16_224', #OK (Opset = 11)
     #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
@@ -46,5 +46,5 @@ if __name__ == '__main__':
     print('Convert model to ONNX successfully!')
 
     print('Convert to TRT...')
-    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt'
+    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt --explicitBatch --inputIOFormats=fp16:chw --outputIOFormats=fp16:chw --fp16'
     print(COMMAND)
