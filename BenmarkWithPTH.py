@@ -57,8 +57,8 @@ for images in dataloader:
         start = timeit.default_timer()
         output = model(images)
         stop = timeit.default_timer()
-        print('Time for image',cnt,':', stop - start)
         cnt += 1
+        print('Time for image',cnt,':', stop - start)
         Avg += (stop - start) / 8
 print(f'\n=> Time of {CFG["model_arch"]}: {Avg}')
 

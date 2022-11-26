@@ -61,7 +61,7 @@ if __name__ == '__main__':
     print(f'Model: {CFG["model_arch"]}')
     print('Load model successfull!')
 
-    NumImg = 8
+    NumImg = 10
     Avg = 0.0
     for num in range (1, NumImg+1):
         print(f'Allocating input and output memory for image {num}: ')
@@ -86,7 +86,7 @@ if __name__ == '__main__':
         print('---------------------------')
 
     f = open("Benmark.txt", "a")
-    s = f'Average validating time per image of {CFG["model_arch"]}: {str(Avg)} second\n'
+    s = f'Average validating time per image of {CFG["model_arch"]}.trt: {str(Avg)} second\n'
     print(s)
     f.write(s)
     f.close()
