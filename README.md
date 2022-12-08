@@ -42,3 +42,6 @@ Then, update your pip packages to newest version: pip install pip --upgrade
   
 # Loading and predicting with TRT Models
   https://github.com/NVIDIA/TensorRT/blob/main/quickstart/IntroNotebooks/4.%20Using%20PyTorch%20through%20ONNX.ipynb
+  
+# Source code of Resnet model from Torchvision
+  https://pytorch.org/vision/0.8/_modules/torchvision/models/resnet.html
