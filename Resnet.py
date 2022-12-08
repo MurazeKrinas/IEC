@@ -62,7 +62,9 @@ class ResNet(nn.Module):
 
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
-        self.layer1 = self._make_layer(block, 64, layers[0])
+        self.layer1 = self.layer2 = self.layer3 = self.layer4 = None
+        if (layers[0] != 0):
+            self.layer1 = self._make_layer(block, 64, layers[0])
         if (layers[1] != 0):
             self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         if (layers[2] != 0):
@@ -71,7 +73,10 @@ class ResNet(nn.Module):
             self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
 
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        if (layers[3] == 0): 
+            self.fc = nn.Linear(256 * block.expansion, num_classes)
+        else:
+            self.fc = nn.Linear(512 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -105,11 +110,15 @@ class ResNet(nn.Module):
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
-
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
+        
+        if (self.layer1 != None):
+            x = self.layer1(x)
+        if (self.layer2 != None):
+            x = self.layer2(x)
+        if (self.layer3 != None):
+            x = self.layer3(x)
+        if (self.layer4 != None):
+            x = self.layer4(x)
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
@@ -122,27 +131,31 @@ class ResNet(nn.Module):
 
 def Resnet(NumLayer, **kwargs):
     if (NumLayer == 18):
+        print('Model: Resnet18')
         Layer = [2,2,2,2]
     elif (NumLayer == 10):
+        print('Model: Resnet10')
         Layer = [1,1,1,1]
+    elif (NumLayer == 8):
+        print('Model: Resnet8')
+        Layer = [1,0,1,1]
     return ResNet(BasicBlock, Layer, **kwargs)
 
 if __name__ == '__main__':
     print('Start building Model...')
-    Model = Resnet(10)
+    Model = Resnet(8)
     #Model = torch.load('./PTHModels/Resnet10.pth')
     Device = torch.device(CFG['device'])
     Model.to(Device)
-    #print(Model)
+    print(Model)
     print('Build Model successfully!')
     
-    print('Start rebuild and read CSV file...')
-    SplitTrainData()
-    train = pd.read_csv('./Dataset/MinimalTrainDataset.csv')
-    print(train.head())
+    print('\nStart rebuild and read CSV file...')
+    train = pd.read_csv('./Dataset/Train.csv')
+    
+    #SplitData()
+    #train = pd.read_csv('./Dataset/MinimalTrainDataset.csv')
 
-    #SplitEvalData()
-    #train = pd.read_csv('./Dataset/MinimalValidateDataset.csv')
     #print(valid.head())
     seed_everything(CFG['seed'])
     folds = StratifiedKFold(n_splits=CFG['fold_num'], shuffle=True, random_state=CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
@@ -151,9 +164,9 @@ if __name__ == '__main__':
     
     for fold, (trn_idx, val_idx) in enumerate(folds):
         if fold > 0:
-          break;
-        print(f'Start training with fold {fold}...')
-        print(len(trn_idx), len(val_idx))
+            break
+        print(f'\nStart training with fold {fold}...')
+        #print(len(trn_idx), len(val_idx))
         train_loader, val_loader = prepare_dataloader(train, trn_idx, val_idx)
 
         #scaler = GradScaler()   
@@ -162,10 +175,18 @@ if __name__ == '__main__':
         
         loss_tr = loss_fn = nn.CrossEntropyLoss().to(Device)
         
+        TrainAvgAccuracy = ValidAvgAccuracy = 0.0
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
-            #EvalModel(fold, epoch, Model, loss_fn, val_loader, Device)
-     
-    ExportPATH = './PTHModels/Resnet10.pth'
-    torch.save(Model, ExportPATH)
-    print(f'Save pretrained model Resnet10 successfull!')
+            with torch.no_grad():
+                print('\nEVALUATING TRAINING ACCURACY...')
+                TrainAvgAccuracy = TrainAvgAccuracy + EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device)
+                print('\nEVALUATING VALIDATION ACCURACY...')
+                ValidAvgAccuracy =  ValidAvgAccuracy + EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device)
+                print('\n--------------------------------------------\n')
+        print('=>Training average accuracy: {0:.3f}%'.format(TrainAvgAccuracy * 100))
+        print('=>Validating average accuracy: {0:.3f}%'.format(ValidAvgAccuracy * 100))
+        
+        #ExportPATH = './PTHModels/Resnet10.pth'
+        #torch.save(Model, ExportPATH)
+        #print(f'Save pretrained model Resnet10 successfull!')

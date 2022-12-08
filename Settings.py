@@ -23,9 +23,9 @@ CFG = {
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
-    'epochs': 1,
-    'train_bs': 32,
-    'valid_bs': 32,
+    'epochs': 3,
+    'train_bs': 2,
+    'valid_bs': 2,
     'T_0': 10,
     'lr': 1e-4,
     'min_lr': 1e-6,
@@ -185,7 +185,7 @@ def TrainModel(epoch, model, loss_fn, optimizer, train_loader, device, scheduler
         for step, (imgs, image_labels) in pbar:
             imgs = imgs.to(device).float()
             image_labels = image_labels.to(device).long()
-            print(imgs,image_labels)
+            #print(imgs,image_labels)
             scaler = GradScaler()
             with autocast():
           
@@ -211,14 +211,14 @@ def TrainModel(epoch, model, loss_fn, optimizer, train_loader, device, scheduler
                         scheduler.step()
 
                 if ((step + 1) % CFG['verbose_step'] == 0) or ((step + 1) == len(train_loader)):
-                    description = f'epoch {epoch} loss: {running_loss:.4f}'
+                    description = f'Epoch {epoch} loss: {running_loss:.4f}'
                     
                     pbar.set_description(description)
                   
         if scheduler is not None and not schd_batch_update:
            scheduler.step()
     
-def EvalModel(fold, epoch, model, loss_fn, val_loader, device):
+def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, scheduler=None, schd_loss_update=False):
         model.eval()
 
         loss_sum = 0
@@ -241,15 +241,31 @@ def EvalModel(fold, epoch, model, loss_fn, val_loader, device):
             sample_num += image_labels.shape[0]  
 
             if ((step + 1) % CFG['verbose_step'] == 0) or ((step + 1) == len(val_loader)):
-                description = f'epoch {epoch} loss: {loss_sum/sample_num:.4f}'
+                description = f'Epoch {epoch} loss: {loss_sum/sample_num:.4f}'
                 pbar.set_description(description)
         
         image_preds_all = np.concatenate(image_preds_all)
         image_targets_all = np.concatenate(image_targets_all)
-        print('validation multi-class accuracy = {:.4f}'.format((image_preds_all==image_targets_all).mean()))
+        
+        print('Validation multi-class accuracy = {:.4f}'.format((image_preds_all==image_targets_all).mean()))
         print ("Classification report: ", (classification_report(image_targets_all, image_preds_all)))
         print ("F1 micro averaging:",(f1_score(image_targets_all, image_preds_all, average='micro')))
         
+        if isTrain == True:
+            print('Training loss', loss_sum/sample_num, epoch + fold*33)
+            print('Training accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
+        else:
+            print('Validation loss', loss_sum/sample_num, epoch + fold*33)
+            print('Validation accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
+          
+        if scheduler is not None:
+            if schd_loss_update:
+                scheduler.step(loss_sum/sample_num)
+            else:
+                scheduler.step()
+                
+        return ((image_preds_all==image_targets_all).mean() / CFG['epochs'])
+
 def seed_everything(seed):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
@@ -259,7 +275,7 @@ def seed_everything(seed):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-def SplitTrainData():
+def SplitData():
     Train = pd.read_csv('./Dataset/Train.csv')
     TrainDataframe = {
         'image_id': [],
@@ -268,7 +284,7 @@ def SplitTrainData():
     MinimalDataset = pd.DataFrame(TrainDataframe)
 
     DatasetLen = len(Train)
-    ImgPerLable = 25
+    ImgPerLable = 1000
     L = R = 0
     for R in range(0, DatasetLen):
         if (R == DatasetLen - 1 or Train.iloc[R,1] != Train.iloc[R+1,1]):
@@ -283,22 +299,3 @@ def SplitTrainData():
             L = R + 1
 
     MinimalDataset.to_csv('./Dataset/MinimalTrainDataset.csv', index = False)
-
-def SplitEvalData():
-    Valid = pd.read_csv('./Dataset/Train.csv')
-    ValidDataframe = {
-        'image_id': [],
-        'label': [],
-    }
-    MinimalDataset = pd.DataFrame(ValidDataframe)
-
-    DatasetLen = len(Valid)
-    NumValidateImg = 20
-    ID = random.sample(range(0,DatasetLen), NumValidateImg)
-    for Obj in ID:
-        Obj_Name = Valid.iloc[Obj,0]
-        Obj_Label = Valid.iloc[Obj,1]
-        #print(Obj_Name, Obj_Lable),
-        MinimalDataset.loc[len(MinimalDataset)] = [Obj_Name, Obj_Label]
-
-    MinimalDataset.to_csv('./Dataset/MinimalValidateDataset.csv', index = False)
