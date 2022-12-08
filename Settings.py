@@ -1,6 +1,9 @@
 import sklearn
 from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import classification_report
+from sklearn.metrics import f1_score
 import torch
+import torch.nn as nn
 import pandas as pd
 import random
 import numpy as np
@@ -15,13 +18,12 @@ from albumentations import (
           IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, IAAPiecewiseAffine, RandomResizedCrop,
           IAASharpen, IAAEmboss, RandomBrightnessContrast, Flip, OneOf, Compose, Normalize, Cutout, CoarseDropout, ShiftScaleRotate, CenterCrop, Resize
       )
-
 CFG = {
     'fold_num': 4,
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
-    'epochs': 2,
+    'epochs': 1,
     'train_bs': 32,
     'valid_bs': 32,
     'T_0': 10,
@@ -126,31 +128,6 @@ class Dataset():
         else:
             return img
 
-def SplitData():
-    Train = pd.read_csv('./Dataset/Train.csv')
-    TrainDataframe = {
-        'image_id': [],
-        'label': [],
-    }
-    MinimalDataset = pd.DataFrame(TrainDataframe)
-
-    DatasetLen = len(Train)
-    ImgPerLable = 25
-    L = R = 0
-    for R in range(0, DatasetLen):
-        if (R == DatasetLen - 1 or Train.iloc[R,1] != Train.iloc[R+1,1]):
-            ID = random.sample(range(L,R), ImgPerLable)
-            #print(L, R)
-            #print(ID)
-            for Obj in ID:
-                Obj_Name = Train.iloc[Obj,0]
-                Obj_Label = Train.iloc[Obj,1]
-                #print(Obj_Name, Obj_Lable),
-                MinimalDataset.loc[len(MinimalDataset)] = [Obj_Name, Obj_Label]
-            L = R + 1
-
-    MinimalDataset.to_csv('./Dataset/MinimalTrainDataset.csv', index = False)
-
 def get_valid_transforms():
         return Compose([
                 CenterCrop(CFG['img_size'], CFG['img_size'], p=1.),
@@ -240,7 +217,39 @@ def TrainModel(epoch, model, loss_fn, optimizer, train_loader, device, scheduler
                   
         if scheduler is not None and not schd_batch_update:
            scheduler.step()
+    
+def EvalModel(fold, epoch, model, loss_fn, val_loader, device):
+        model.eval()
 
+        loss_sum = 0
+        sample_num = 0
+        image_preds_all = []
+        image_targets_all = []
+        
+        pbar = tqdm(enumerate(val_loader), total=len(val_loader))
+        for step, (imgs, image_labels) in pbar:
+            imgs = imgs.to(device).float()
+            image_labels = image_labels.to(device).long()
+            
+            image_preds = model(imgs)   #output = model(input)
+            image_preds_all += [torch.argmax(image_preds, 1).detach().cpu().numpy()]
+            image_targets_all += [image_labels.detach().cpu().numpy()]
+            
+            loss = loss_fn(image_preds, image_labels)
+            
+            loss_sum += loss.item()*image_labels.shape[0]
+            sample_num += image_labels.shape[0]  
+
+            if ((step + 1) % CFG['verbose_step'] == 0) or ((step + 1) == len(val_loader)):
+                description = f'epoch {epoch} loss: {loss_sum/sample_num:.4f}'
+                pbar.set_description(description)
+        
+        image_preds_all = np.concatenate(image_preds_all)
+        image_targets_all = np.concatenate(image_targets_all)
+        print('validation multi-class accuracy = {:.4f}'.format((image_preds_all==image_targets_all).mean()))
+        print ("Classification report: ", (classification_report(image_targets_all, image_preds_all)))
+        print ("F1 micro averaging:",(f1_score(image_targets_all, image_preds_all, average='micro')))
+        
 def seed_everything(seed):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
@@ -249,3 +258,47 @@ def seed_everything(seed):
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
+
+def SplitTrainData():
+    Train = pd.read_csv('./Dataset/Train.csv')
+    TrainDataframe = {
+        'image_id': [],
+        'label': [],
+    }
+    MinimalDataset = pd.DataFrame(TrainDataframe)
+
+    DatasetLen = len(Train)
+    ImgPerLable = 25
+    L = R = 0
+    for R in range(0, DatasetLen):
+        if (R == DatasetLen - 1 or Train.iloc[R,1] != Train.iloc[R+1,1]):
+            ID = random.sample(range(L,R), ImgPerLable)
+            #print(L, R)
+            #print(ID)
+            for Obj in ID:
+                Obj_Name = Train.iloc[Obj,0]
+                Obj_Label = Train.iloc[Obj,1]
+                #print(Obj_Name, Obj_Lable),
+                MinimalDataset.loc[len(MinimalDataset)] = [Obj_Name, Obj_Label]
+            L = R + 1
+
+    MinimalDataset.to_csv('./Dataset/MinimalTrainDataset.csv', index = False)
+
+def SplitEvalData():
+    Valid = pd.read_csv('./Dataset/Train.csv')
+    ValidDataframe = {
+        'image_id': [],
+        'label': [],
+    }
+    MinimalDataset = pd.DataFrame(ValidDataframe)
+
+    DatasetLen = len(Valid)
+    NumValidateImg = 20
+    ID = random.sample(range(0,DatasetLen), NumValidateImg)
+    for Obj in ID:
+        Obj_Name = Valid.iloc[Obj,0]
+        Obj_Label = Valid.iloc[Obj,1]
+        #print(Obj_Name, Obj_Lable),
+        MinimalDataset.loc[len(MinimalDataset)] = [Obj_Name, Obj_Label]
+
+    MinimalDataset.to_csv('./Dataset/MinimalValidateDataset.csv', index = False)

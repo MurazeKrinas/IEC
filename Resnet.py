@@ -1,5 +1,3 @@
-import torch
-import torch.nn as nn
 from Settings import *
 
 def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
@@ -132,21 +130,28 @@ def Resnet(NumLayer, **kwargs):
 if __name__ == '__main__':
     print('Start building Model...')
     Model = Resnet(10)
+    #Model = torch.load('./PTHModels/Resnet10.pth')
     Device = torch.device(CFG['device'])
     Model.to(Device)
     #print(Model)
     print('Build Model successfully!')
     
     print('Start rebuild and read CSV file...')
-    SplitData()
+    SplitTrainData()
     train = pd.read_csv('./Dataset/MinimalTrainDataset.csv')
-    #print(train.head())
+    print(train.head())
+
+    #SplitEvalData()
+    #train = pd.read_csv('./Dataset/MinimalValidateDataset.csv')
+    #print(valid.head())
     seed_everything(CFG['seed'])
     folds = StratifiedKFold(n_splits=CFG['fold_num'], shuffle=True, random_state=CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
     print('Read file CSV successfully!')
 
     
     for fold, (trn_idx, val_idx) in enumerate(folds):
+        if fold > 0:
+          break;
         print(f'Start training with fold {fold}...')
         print(len(trn_idx), len(val_idx))
         train_loader, val_loader = prepare_dataloader(train, trn_idx, val_idx)
@@ -155,11 +160,12 @@ if __name__ == '__main__':
         optimizer = torch.optim.Adam(Model.parameters(), lr=CFG['lr'], weight_decay=CFG['weight_decay'])
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=CFG['T_0'], T_mult=1, eta_min=CFG['min_lr'], last_epoch=-1)
         
-        loss_tr = nn.CrossEntropyLoss().to(Device)
+        loss_tr = loss_fn = nn.CrossEntropyLoss().to(Device)
         
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
-        
+            #EvalModel(fold, epoch, Model, loss_fn, val_loader, Device)
+     
     ExportPATH = './PTHModels/Resnet10.pth'
     torch.save(Model, ExportPATH)
     print(f'Save pretrained model Resnet10 successfull!')
