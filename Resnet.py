@@ -1,5 +1,10 @@
 import torch
 import torch.nn as nn
+from IEC import IEC
+import pandas as pd
+import random
+from sklearn.model_selection import StratifiedKFold
+import numpy as np
 
 def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
@@ -45,7 +50,7 @@ class BasicBlock(nn.Module):
 
 class ResNet(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1000, groups=1, width_per_group=64,norm_layer=None):
+    def __init__(self, block, layers, num_classes=IEC.CFG['numclass'], groups=1, width_per_group=64,norm_layer=None):
         super(ResNet, self).__init__()
         if norm_layer is None:
             norm_layer = nn.BatchNorm2d
@@ -124,10 +129,64 @@ class ResNet(nn.Module):
 def Resnet(NumLayer, **kwargs):
     if (NumLayer == 18):
         Layer = [2,2,2,2]
+    elif (NumLayer == 10):
+        Layer = [1,1,1,1]
     return ResNet(BasicBlock, Layer, **kwargs)
 
+def SplitData():
+    Train = pd.read_csv('./Dataset/Train.csv')
+    TrainDataframe = {
+        'image_id': [],
+        'label': [],
+    }
+    MinimalDataset = pd.DataFrame(TrainDataframe)
+
+    DatasetLen = len(Train)
+    ImgPerLable = 25
+    L = R = 0
+    for R in range(0, DatasetLen):
+        if (R == DatasetLen - 1 or Train.iloc[R,1] != Train.iloc[R+1,1]):
+            ID = random.sample(range(L,R), ImgPerLable)
+            #print(L, R)
+            #print(ID)
+            for Obj in ID:
+                Obj_Name = Train.iloc[Obj,0]
+                Obj_Label = Train.iloc[Obj,1]
+                #print(Obj_Name, Obj_Lable),
+                MinimalDataset.loc[len(MinimalDataset)] = [Obj_Name, Obj_Label]
+            L = R + 1
+
+    MinimalDataset.to_csv('./Dataset/MinimalTrainDataset.csv', index = False)
+
 if __name__ == '__main__':
-    print('Start building model...')
-    Model = Resnet(18)
-    print('Build model successfully!')
-    print(Model)
+    print('Start building Model...')
+    Model = Resnet(10)
+    Device = torch.device(IEC.CFG['device'])
+    Model.to(Device)
+    #print(Model)
+    print('Build Model successfully!')
+    
+    print('Start rebuild and read CSV file...')
+    SplitData()
+    train = pd.read_csv('./Dataset/MinimalTrainDataset.csv')
+    #print(train.head())
+    IEC.seed_everything(IEC.CFG['seed'])
+    IEC.folds = StratifiedKFold(n_splits=IEC.CFG['fold_num'], shuffle=True, random_state=IEC.CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
+
+    for fold, (trn_idx, val_idx) in enumerate(IEC.folds):
+        print(f'Start training with fold {fold}...')
+        print(len(trn_idx), len(val_idx))
+        train_loader, val_loader = IEC.prepare_dataloader(train, trn_idx, val_idx, data_root='./Dataset/train_images')
+
+        #scaler = GradScaler()   
+        optimizer = torch.optim.Adam(Model.parameters(), lr=IEC.CFG['lr'], weight_decay=IEC.CFG['weight_decay'])
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=IEC.CFG['T_0'], T_mult=1, eta_min=IEC.CFG['min_lr'], last_epoch=-1)
+        
+        loss_tr = nn.CrossEntropyLoss().to(Device)
+        
+        for epoch in range(IEC.CFG['epochs']):
+            IEC.train_one_epoch(fold, epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
+        
+        ExportPATH = './PTHModels/Resnet10.pth'
+        torch.save(Model, ExportPATH)
+        print(f'Save pretrained model Resnet10 successfull!')

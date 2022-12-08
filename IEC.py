@@ -56,6 +56,7 @@ class IEC(Dataset):
     CFG = {
     'fold_num': 4,
     'seed': 719,
+    'numclass': 4,
     #'model_arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
     #'model_arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
 
@@ -70,7 +71,7 @@ class IEC(Dataset):
     
     #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
     'img_size': 224,
-    'epochs': 1,
+    'epochs': 2,
     'train_bs': 32,
     'valid_bs': 32,
     'T_0': 10,
@@ -272,7 +273,7 @@ class IEC(Dataset):
 
     def prepare_dataloader(df, trn_idx, val_idx, data_root='./Dataset/train_images'):
     
-        from catalyst.data.sampler import BalanceClassSampler
+        #from catalyst.data.sampler import BalanceClassSampler
     
         train_ = df.loc[trn_idx,:].reset_index(drop=True)
         valid_ = df.loc[val_idx,:].reset_index(drop=True)
@@ -301,7 +302,6 @@ class IEC(Dataset):
     def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device, scheduler=None, schd_batch_update=False):
         model.train()
 
-        t = time.time()
         running_loss = None
 
         pbar = tqdm(enumerate(train_loader), total=len(train_loader))
