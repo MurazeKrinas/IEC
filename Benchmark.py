@@ -11,7 +11,6 @@ from skimage.transform import resize
 CFG = {
     #'model_arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
     #'model_arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
-
     #'model_arch': 'cait_s24_224', #OK (Opset = 11)
     #'model_arch': 'coat_tiny', #OK (Opset = 10)
     #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
@@ -20,8 +19,14 @@ CFG = {
     #'model_arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
     #'model_arch': 'deit_base_patch16_224', #OK (Opset = 11)
     #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
-    
     #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
+
+    #'model_arch': 'Resnet18',
+    #'model_arch': 'Resnet10',
+    #'model_arch': 'Resnet8_V1',
+    #'model_arch': 'Resnet8_V2',
+    #'model_arch': 'Resnet8_V3',
+    #'model_arch': 'Resnet8_V4',
     'device': 'cuda:0',
     'batch_size': 1
 }
@@ -85,7 +90,7 @@ if __name__ == '__main__':
         print(f'Time for image {num}: {stop-start} second')
         print('---------------------------')
 
-    f = open("Benmark.txt", "a")
+    f = open("Benchmark.txt", "a")
     s = f'Average validating time per image of {CFG["model_arch"]}.trt: {str(Avg)} second\n'
     print(s)
     f.write(s)

@@ -3,7 +3,11 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 import torch
+from torchvision import transforms
+from torchvision import datasets
+from torch import nn
 import torch.nn as nn
+import torch.onnx
 import pandas as pd
 import random
 import numpy as np
@@ -11,6 +15,8 @@ import cv2
 from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 import os
+import timeit
+from pthflops import count_ops
 from albumentations.pytorch import ToTensorV2
 from albumentations import (
           HorizontalFlip, VerticalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
@@ -23,9 +29,9 @@ CFG = {
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
-    'epochs': 3,
-    'train_bs': 2,
-    'valid_bs': 2,
+    'epochs': 10,
+    'train_bs': 1,
+    'valid_bs': 1,
     'T_0': 10,
     'lr': 1e-4,
     'min_lr': 1e-6,

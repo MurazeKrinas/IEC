@@ -138,12 +138,12 @@ def Resnet(NumLayer, **kwargs):
         Layer = [1,1,1,1]
     elif (NumLayer == 8):
         print('Model: Resnet8')
-        Layer = [1,0,1,1]
+        Layer = [1,1,1,0]
     return ResNet(BasicBlock, Layer, **kwargs)
 
 if __name__ == '__main__':
     print('Start building Model...')
-    Model = Resnet(8)
+    Model = Resnet(18)
     #Model = torch.load('./PTHModels/Resnet10.pth')
     Device = torch.device(CFG['device'])
     Model.to(Device)
@@ -187,6 +187,6 @@ if __name__ == '__main__':
         print('=>Training average accuracy: {0:.3f}%'.format(TrainAvgAccuracy * 100))
         print('=>Validating average accuracy: {0:.3f}%'.format(ValidAvgAccuracy * 100))
         
-        #ExportPATH = './PTHModels/Resnet10.pth'
-        #torch.save(Model, ExportPATH)
-        #print(f'Save pretrained model Resnet10 successfull!')
+        ExportPATH = './PTHModels/Resnet18_BS1.pth'
+        torch.save(Model, ExportPATH)
+        print(f'Save pretrained model successfull!')

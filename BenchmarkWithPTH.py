@@ -1,16 +1,8 @@
-import torch
-from torch import nn
-import torchvision
-from torchvision import transforms
-from torchvision import datasets
-from PIL import Image
-import timm
-import timeit
+from Resnet import *
 
 CFG = {
     #'model_arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
     #'model_arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
-
     #'model_arch': 'cait_s24_224', #OK (Opset = 11)
     #'model_arch': 'coat_tiny', #OK (Opset = 10)
     #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
@@ -19,11 +11,18 @@ CFG = {
     #'model_arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
     #'model_arch': 'deit_base_patch16_224', #OK (Opset = 11)
     #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
-    
     #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
+
+    #'model_arch': 'Resnet18',
+    #'model_arch': 'Resnet10',
+    #'model_arch': 'Resnet8_V1',
+    #'model_arch': 'Resnet8_V2',
+    #'model_arch': 'Resnet8_V3',
+    #'model_arch': 'Resnet8_V4',
     'device': 'cuda:0'
 }
 
+'''
 class CassvaImgClassifier(nn.Module):
     def __init__(self, model_arch, n_class, pretrained=False):
         super().__init__()
@@ -31,6 +30,7 @@ class CassvaImgClassifier(nn.Module):
     def forward(self, x):
         x = self.model(x)
         return x
+'''
 
 PATH = f'./PTHModels/{CFG["model_arch"]}.pth'
 model = torch.load(PATH)
@@ -62,7 +62,10 @@ for images in dataloader:
         Avg += (stop - start) / 8
 print(f'\n=> Time of {CFG["model_arch"]}: {Avg}')
 
-f = open("Benmark.txt", "a")
+Inp = torch.rand(1,3,224,224).to(device)
+count_ops(model, Inp)
+
+f = open("Benchmark.txt", "a")
 s = f'\nTime of {CFG["model_arch"]}: {str(Avg)} (second)\n'
 f.write(s)
 f.close()
