@@ -25,19 +25,19 @@ from albumentations import (
       )
 CFG = {
     #'model_arch': 'Resnet50',
-    'model_arch': 'Resnet18',
+    #'model_arch': 'Resnet18',
     #'model_arch': 'Resnet10',
     #'model_arch': 'Resnet8_V1',
     #'model_arch': 'Resnet8_V2',
     #'model_arch': 'Resnet8_V3',
-    #'model_arch': 'Resnet8_V4',
+    'model_arch': 'Resnet8_V4',
     'fold_num': 4,
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
-    'epochs': 10,
-    'train_bs': 4,
-    'valid_bs': 4,
+    'epochs': 5,
+    'train_bs': 2,
+    'valid_bs': 2,
     'T_0': 10,
     'lr': 1e-4,
     'min_lr': 1e-6,
@@ -296,7 +296,7 @@ def SplitData():
     MinimalDataset = pd.DataFrame(TrainDataframe)
 
     DatasetLen = len(Train)
-    ImgPerLable = 2000
+    ImgPerLable = 250
     L = R = 0
     for R in range(0, DatasetLen):
         if (R == DatasetLen - 1 or Train.iloc[R,1] != Train.iloc[R+1,1]):

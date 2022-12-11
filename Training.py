@@ -47,10 +47,9 @@ if __name__ == '__main__':
         print('=>Training average accuracy: {0:.3f}%'.format(TrainAvgAccuracy * 100))
         print('=>Validating average accuracy: {0:.3f}%'.format(ValidAvgAccuracy * 100))
         
-        # ExportPATH = f'./PTHModels/{CFG["model_arch"]}.pth'
-        # torch.save(Model, ExportPATH)
-        # print(f'Save pretrained model successfull!')
+        ExportPATH = f'./PTHModels/{CFG["model_arch"]}.pth'
+        torch.save(Model, ExportPATH)
+        print(f'Save pretrained model successfull!')
 
-        # inp = torch.rand(1,3,224,224).to(device)
-        # Count the number of FLOPs
-        # count_ops(model, inp)
+    # inp = torch.rand(2,3,224,224).to(Device)
+    # count_ops(Model, inp)
