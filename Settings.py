@@ -16,7 +16,6 @@ from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 import os
 import timeit
-from pthflops import count_ops
 from albumentations.pytorch import ToTensorV2
 from albumentations import (
           HorizontalFlip, VerticalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
@@ -297,7 +296,7 @@ def SplitData():
     MinimalDataset = pd.DataFrame(TrainDataframe)
 
     DatasetLen = len(Train)
-    ImgPerLable = 25
+    ImgPerLable = 2000
     L = R = 0
     for R in range(0, DatasetLen):
         if (R == DatasetLen - 1 or Train.iloc[R,1] != Train.iloc[R+1,1]):
