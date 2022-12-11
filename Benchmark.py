@@ -34,14 +34,14 @@ CFG = {
 def CreatTestBatch(num):
     ImgPATH=f'./Dataset/test_images/Image/test{num}.png'
     img = resize(io.imread(ImgPATH), (224, 224))
-    input_batch = np.array(np.repeat(np.expand_dims(np.array(img, dtype=np.float32), axis=0), CFG['batch_size'], axis=0), dtype=np.float32)
+    input_batch = np.array(np.repeat(np.expand_dims(np.array(img, dtype=np.float16), axis=0), CFG['batch_size'], axis=0), dtype=np.float16)
     #print(f'Shape: {input_batch.shape}')
     return input_batch
 
 def preprocess_image(img):
     norm = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     result = norm(torch.from_numpy(img).transpose(0,2).transpose(1,2))
-    return np.array(result, dtype=np.float16)
+    return np.array(result, dtype=np.int8)
 
 def predict(batch): # result gets copied into output
     # transfer input data to device
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     Avg = 0.0
     for num in range (1, NumImg+1):
         print(f'Allocating input and output memory for image {num}: ')
-        output = np.empty([CFG['batch_size'], 1000], dtype = np.float16) 
+        output = np.empty([CFG['batch_size'], 1000], dtype = np.int8) 
 
         InputBatch = CreatTestBatch(num)
         d_input = cuda.mem_alloc(1 * InputBatch.nbytes)

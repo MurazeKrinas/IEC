@@ -13,6 +13,7 @@ CFG = {
     #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
     #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
 
+    #'model_arch': 'Resnet50',
     #'model_arch': 'Resnet18',
     #'model_arch': 'Resnet10',
     #'model_arch': 'Resnet8_V1',
