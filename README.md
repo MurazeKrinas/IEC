@@ -45,3 +45,6 @@ Then, update your pip packages to newest version: pip install pip --upgrade
   
 # Source code of Resnet model from Torchvision
   https://pytorch.org/vision/0.8/_modules/torchvision/models/resnet.html
+
+# Training model result
+https://colab.research.google.com/drive/1FeRDes8ffayT6VDFl8J3UIgn4VpsTQUV?usp=sharing
