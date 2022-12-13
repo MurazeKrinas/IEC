@@ -87,7 +87,7 @@ class Dataset():
     def __len__(self):
         return self.df.shape[0]
 
-    def get_img(path = './Dataset/train_images'):
+    def get_img(path = './Dataset/CornDataset'):
         im_bgr = cv2.imread(path)
         im_rgb = im_bgr[:, :, [2, 1, 0]]
         return im_rgb
@@ -163,7 +163,7 @@ def get_train_transforms():
                 ToTensorV2(p=1.0),
             ], p=1.)
 
-def prepare_dataloader(df, trn_idx, val_idx, data_root='./Dataset/train_images'):
+def prepare_dataloader(df, trn_idx, val_idx, data_root='./Dataset/CornDataset'):
     
         train_ = df.loc[trn_idx,:].reset_index(drop=True)
         valid_ = df.loc[val_idx,:].reset_index(drop=True)
