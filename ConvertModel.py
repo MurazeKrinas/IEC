@@ -1,51 +1,41 @@
 from Resnet import *
 
-CFG = {
-    #'model_arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
-    #'model_arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
-    #'model_arch': 'cait_s24_224', #OK (Opset = 11)
-    #'model_arch': 'coat_tiny', #OK (Opset = 10)
-    #'model_arch': 'gmlp_s16_224', #OK (Opset = 11)
-    #'model_arch': 'inception_v4', #OK (Opset = 11)
-    #'model_arch': 'resnet50', #OK (Opset = 11)
-    #'model_arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
-    #'model_arch': 'deit_base_patch16_224', #OK (Opset = 11)
-    #'model_arch': 'vit_base_patch16_224', #OK (Opset = 11)
-    #'model_arch': 'resmlp_12_224', #ERROR: Operator addcmul
+Model = {
+    #'arch': 'tf_efficientnet_b4', #OK (Just ONNX, Opset = 11)
+    #'arch': 'convit_tiny', #OK (Just ONNX, Opset = 11)
+    #'arch': 'cait_s24_224', #OK (Opset = 11)
+    #'arch': 'coat_tiny', #OK (Opset = 10)
+    #'arch': 'gmlp_s16_224', #OK (Opset = 11)
+    #'arch': 'inception_v4', #OK (Opset = 11)
+    #'arch': 'resnet50', #OK (Opset = 11)
+    #'arch': 'mixer_b16_224_in21k', #OK (Opset = 11)
+    #'arch': 'deit_base_patch16_224', #OK (Opset = 11)
+    #'arch': 'vit_base_patch16_224', #OK (Opset = 11)
+    #'arch': 'resmlp_12_224', #ERROR: Operator addcmul
     
-    #'model_arch': 'Resnet50',
-    #'model_arch': 'Resnet18',
-    #'model_arch': 'Resnet10',
-    #'model_arch': 'Resnet8_V1',
-    #'model_arch': 'Resnet8_V2',
-    #'model_arch': 'Resnet8_V3',
-    'model_arch': 'Resnet8_V4',
+    #'arch': 'Resnet50',
+    #'arch': 'Resnet18',
+    #'arch': 'Resnet10',
+    #'arch': 'Resnet8_V1',
+    #'arch': 'Resnet8_V2',
+    #'arch': 'Resnet8_V3',
+    'arch': 'Resnet8_V4',
     
     'device': 'cuda:0'
 }
 
-'''
-class CassvaImgClassifier(nn.Module):
-    def __init__(self, model_arch, n_class, pretrained=False):
-        super().__init__()
-      
-    def forward(self, x):
-        x = self.model(x)
-        return x
-'''
-
 if __name__ == '__main__':
-    PATH = f'./PTHModels/{CFG["model_arch"]}.pth'
-    print(f'Start loading model {CFG["model_arch"]}')
+    PATH = f'./PTHModels/{Model["arch"]}.pth'
+    print(f'Start loading model {Model["arch"]}')
     model = torch.load(PATH)
     print(model)
     print('Loading model successfull!')
     
-    BATCH_SIZE = 8
-    device = torch.device(CFG['device'])
+    BATCH_SIZE = 1
+    device = torch.device(Model['device'])
     dummy_input=torch.randn(BATCH_SIZE, 3, 224, 224).to(device)
 
-    Output = f'./ONNXModels/{CFG["model_arch"]}.onnx'
+    Output = f'./ONNXModels/{Model["arch"]}.onnx'
     #For Coat_tiny
     #torch.onnx.export(model, dummy_input, Output, opset_version=10, verbose=True)
 
@@ -53,6 +43,6 @@ if __name__ == '__main__':
     print('Convert model to ONNX successfully!')
 
     print('Convert to TRT...')
-    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt --explicitBatch --inputIOFormats=int8:chw --outputIOFormats=int8:chw --int8'
+    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{Model["arch"]}.trt --explicitBatch --inputIOFormats=int8:chw --outputIOFormats=int8:chw --int8'
     print(COMMAND)
     
