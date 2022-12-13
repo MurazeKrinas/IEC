@@ -23,23 +23,13 @@ CFG = {
     'device': 'cuda:0'
 }
 
-'''
-class CassvaImgClassifier(nn.Module):
-    def __init__(self, model_arch, n_class, pretrained=False):
-        super().__init__()
-      
-    def forward(self, x):
-        x = self.model(x)
-        return x
-'''
-
 PATH = f'./PTHModels/{CFG["model_arch"]}.pth'
 model = torch.load(PATH)
 
 print('\nStart load dataset...')
 mean = [0.485, 0.456, 0.406] 
 std = [0.229, 0.224, 0.225]
-transform_norm = transforms.Compose([transforms.Resize((224,224)), transforms.ToTensor(), transforms.Normalize(mean, std)])
+transform_norm = transforms.Compose([transforms.Resize((CFG['img_size'],CFG['img_size'])), transforms.ToTensor(), transforms.Normalize(mean, std)])
 
 dataset = datasets.ImageFolder('./Dataset/test_images/', transform=transform_norm)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
@@ -62,9 +52,6 @@ for images in dataloader:
         print('Time for image',cnt,':', stop - start)
         Avg += (stop - start) / 8
 print(f'\n=> Time of {CFG["model_arch"]}: {Avg}')
-
-Inp = torch.rand(1,3,224,224).to(device)
-count_ops(model, Inp)
 
 f = open("Benchmark.txt", "a")
 s = f'\nTime of {CFG["model_arch"]}: {str(Avg)} (second)\n'
