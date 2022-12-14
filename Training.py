@@ -49,7 +49,6 @@ if __name__ == '__main__':
         
         ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
         torch.save(Model, ExportPATH)
-        print(f'Save pretrained model successfull!'))
-
+        print(f'Save pretrained model successfull!')
     # inp = torch.rand(2,3,224,224).to(Device)
     # count_ops(Model, inp)

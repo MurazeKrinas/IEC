@@ -45,4 +45,3 @@ if __name__ == '__main__':
     print('Convert to TRT...')
     COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{Model["arch"]}.trt --explicitBatch --inputIOFormats=int8:chw --outputIOFormats=int8:chw --int8'
     print(COMMAND)
-    

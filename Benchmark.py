@@ -1,6 +1,8 @@
 import torch
+import fnmatch
 from torchvision.transforms import Normalize
 import timeit
+import os
 import pycuda.driver as cuda
 import pycuda.autoinit
 import tensorrt as trt
@@ -27,14 +29,23 @@ Model = {
     #'arch': 'Resnet8_V1',
     #'arch': 'Resnet8_V2',
     #'arch': 'Resnet8_V3',
-    #'arch': 'Resnet8_V4',
+    'arch': 'Resnet8_V4',
     'device': 'cuda:0',
     'batch_size': 4
 }
 
+def ChangeName():
+    path = './Dataset/test_images/'
+    num = 0
+    for filename in os.listdir(path):
+        sour = path + filename
+        des = path + f'test{num}.jpg'
+        os.rename(sour, des)
+        num += 1
+
 def CreatTestBatch(num):
-    ImgPATH=f'./Dataset/test_images/Image/test{num}.png'
-    img = resize(io.imread(ImgPATH), (224, 224))
+    ImgPATH=f'./Dataset/Images/test_images/test{num}.jpg'
+    img = resize(io.imread(ImgPATH), (112, 112))
     input_batch = np.array(np.repeat(np.expand_dims(np.array(img, dtype=np.float16), axis=0), Model['batch_size'], axis=0), dtype=np.float16)
     #print(f'Shape: {input_batch.shape}')
     return input_batch
@@ -67,15 +78,16 @@ if __name__ == '__main__':
     print(f'Model: {Model["arch"]}')
     print('Load model successfull!')
 
-    NumImg = 10
+    dir_path = r'./Dataset/Images/test_images'
+    NumImg = len(fnmatch.filter(os.listdir(dir_path), '*.*'))
     Avg = 0.0
-    for num in range (1, NumImg+1):
+    for num in range (NumImg):
         print(f'Allocating input and output memory for image {num}: ')
         output = np.empty([Model['batch_size'], 1000], dtype = np.int8) 
 
         InputBatch = CreatTestBatch(num)
-        d_input = cuda.mem_alloc(1 * InputBatch.nbytes)
-        d_output = cuda.mem_alloc(1 * output.nbytes)
+        d_input = cuda.mem_alloc(3 * InputBatch.nbytes)
+        d_output = cuda.mem_alloc(3 * output.nbytes)
 
         bindings = [int(d_input), int(d_output)]
         stream = cuda.Stream()
@@ -86,7 +98,7 @@ if __name__ == '__main__':
 
         start = timeit.default_timer()
         pred = predict(preprocessed_images)
-        print(pred)
+        #print(pred)
         stop = timeit.default_timer()
         Avg += (stop - start) / NumImg 
         print(f'Time for image {num}: {stop-start} second')
@@ -97,10 +109,3 @@ if __name__ == '__main__':
     print(s)
     f.write(s)
     f.close()
-
-    '''
-    print('Verify our TensorRT output is still accurate...')
-    indices = (-pred[0]).argsort()[:5]
-    print("Class | Probability (out of 1)")
-    print(list(zip(indices, pred[0][indices])))
-    '''
