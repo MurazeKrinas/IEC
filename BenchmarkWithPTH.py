@@ -19,7 +19,8 @@ print('Load dataset successfully!')
 print('\nWarming up...')
 dummy_input = torch.rand((1, 3, CFG['img_size'], CFG['img_size'])).float().to(device)
 for i in range(5):
-    Model(dummy_input)
+    with torch.no_grad():
+        Model(dummy_input)
 print('Warm up done!')
 
 print('\nStart validating...')
