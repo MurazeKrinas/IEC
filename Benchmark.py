@@ -86,8 +86,8 @@ if __name__ == '__main__':
         output = np.empty([Model['batch_size'], 1000], dtype = np.int8) 
 
         InputBatch = CreatTestBatch(num)
-        d_input = cuda.mem_alloc(3 * InputBatch.nbytes)
-        d_output = cuda.mem_alloc(3 * output.nbytes)
+        d_input = cuda.mem_alloc(InputBatch.nbytes)
+        d_output = cuda.mem_alloc(output.nbytes)
 
         bindings = [int(d_input), int(d_output)]
         stream = cuda.Stream()
@@ -98,14 +98,16 @@ if __name__ == '__main__':
 
         start = timeit.default_timer()
         pred = predict(preprocessed_images)
-        #print(pred)
+        print(pred)
         stop = timeit.default_timer()
         Avg += (stop - start) / NumImg 
         print(f'Time for image {num}: {stop-start} second')
         print('---------------------------')
 
+    print(f'Average validating time per image of {Model["arch"]}.trt: {Avg} second')
+    
+
     f = open("Benchmark.txt", "a")
     s = f'Average validating time per image of {Model["arch"]}.trt: {str(Avg)} second\n'
-    print(s)
     f.write(s)
     f.close()
