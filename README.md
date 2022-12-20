@@ -30,7 +30,7 @@ First of all, you have to install pip: sudo apt install python3-pip <br/>
 Then, update your pip packages to newest version: pip install pip --upgrade
 
 # Install dependencies package
-  * pip3 install torch==1.6 torchvision==0.7.0 -f https://torch.kmtea.eu/whl/stable.html -f https://ext.kmtea.eu/whl/stable.html
+  * pip3 install torch==1.6 torchvision==0.7.0 -f https://torch.kmtea.eu/whl/stable.html
   * pip3 install scikit-learn
   * pip3 install pillow
   * pip3 install timm
