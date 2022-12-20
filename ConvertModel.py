@@ -19,5 +19,5 @@ if __name__ == '__main__':
     print('Convert model to ONNX successfully!')
 
     print('Convert to TRT...')
-    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt --explicitBatch --inputIOFormats=int8:chw --outputIOFormats=int8:chw --best'
+    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt --explicitBatch --inputIOFormats=fp16:chw --outputIOFormats=fp16:chw --fp16'
     print(COMMAND)
