@@ -30,21 +30,16 @@ First of all, you have to install pip: sudo apt install python3-pip <br/>
 Then, update your pip packages to newest version: pip install pip --upgrade
 
 # Install dependencies package
-  * Torch 1.6 and Torchvision 0.7 (Using jetson-inference to install)
-  * pip3 install pillow==8.4
-  * pip3 install timm==0.6.5
+  * pip3 install torch==1.6 torchvision==0.7.0 -f https://torch.kmtea.eu/whl/stable.html -f https://ext.kmtea.eu/whl/stable.html
+  * pip3 install scikit-learn
+  * pip3 install pillow
+  * pip3 install timm
   * pip3 install pydicom
   * pip3 install catalyst
   * pip3 install albumentations
-
-# Install tensorflow to work with TRT models
-  https://qengineering.eu/install-tensorflow-2.4.0-on-jetson-nano.html
   
 # Loading and predicting with TRT Models
   https://github.com/NVIDIA/TensorRT/blob/main/quickstart/IntroNotebooks/4.%20Using%20PyTorch%20through%20ONNX.ipynb
-  
-# Source code of Resnet model from Torchvision
-  https://pytorch.org/vision/0.8/_modules/torchvision/models/resnet.html
 
 # Training model result
 https://colab.research.google.com/drive/1FeRDes8ffayT6VDFl8J3UIgn4VpsTQUV?usp=sharing
