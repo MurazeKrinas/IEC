@@ -18,7 +18,7 @@ print('Load dataset successfully!')
 
 print('\nWarming up...')
 dummy_input = torch.rand((1, 3, CFG['img_size'], CFG['img_size'])).float().to(device)
-for i in range(5):
+for i in range(3):
     with torch.no_grad():
         Model(dummy_input)
 print('Warm up done!')
@@ -37,9 +37,9 @@ for images in dataloader:
         cnt += 1
         print('Time for image',cnt,':', stop - start)
         Avg += (stop - start) / 100
-print(f'\n=> Time of {CFG["model_arch"]}: {Avg}')
+print(f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second')
 
 f = open("Benchmark.txt", "a")
-s = f'\nTime of {CFG["model_arch"]}: {str(Avg)} (second)\n'
+s = f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second\n'
 f.write(s)
 f.close()

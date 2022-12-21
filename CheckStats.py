@@ -47,8 +47,8 @@ if __name__ == '__main__':
         avgCpu = sum(cpuStats) / len(cpuStats)
         avgMem = sum(memStats) / len(memStats)
 
-        with open('./Benmark.txt', 'a') as Benmark:
-            Benmark.write(f'Avg GPU: {avgGpu:.3f}%,\tAvg CPU: {avgCpu:.3f}%,\tAvg Mem: {avgMem:.3f}/4GB\n')
+        with open('./Benchmark.txt', 'a') as Benchmark:
+            Benchmark.write(f'Avg GPU: {avgGpu:.3f}%,\tAvg CPU: {avgCpu:.3f}%,\tAvg Mem: {avgMem:.3f}/4GB\n')
         print(f'Avg GPU: {avgGpu:.3f}%,\tAvg CPU: {avgCpu:.3f}%,\tAvg Mem: {avgMem:.3f}/4GB\n')
         #print(f'GPU stats: {gpuStats}')
         #print(f'CPU stats: {cpuStats}')
