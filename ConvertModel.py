@@ -7,7 +7,7 @@ if __name__ == '__main__':
     model = torch.load(PATH).eval().to(device)
     print('Loading model successfull!')
     
-    BATCH_SIZE = 1
+    BATCH_SIZE = 8
     dummy_input=torch.randn(BATCH_SIZE, 3, CFG['img_size'], CFG['img_size']).to(device)
 
     Output = f'./ONNXModels/{CFG["model_arch"]}.onnx'
