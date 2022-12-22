@@ -2,6 +2,10 @@ import sklearn
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
+import pycuda.driver as cuda
+import pycuda.autoinit
+import fnmatch
+import tensorrt as trt
 import torch
 from torchvision import transforms
 from torchvision import datasets
@@ -31,11 +35,13 @@ CFG = {
     #'model_arch': 'Resnet8_V2',
     #'model_arch': 'Resnet8_V3',
     'model_arch': 'Resnet8_V4',
+    'type': np.float16(),
     'fold_num': 4,
     'seed': 719,
     'numclass': 4,
     'img_size': 112,
     'epochs': 100,
+    'batch_size': 8,
     'train_bs': 32,
     'valid_bs': 32,
     'T_0': 10,

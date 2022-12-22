@@ -13,7 +13,7 @@ if __name__ == '__main__':
     std = [0.229, 0.224, 0.225]
     transform_norm = transforms.Compose([transforms.Resize((CFG['img_size'],CFG['img_size'])), transforms.ToTensor(), transforms.Normalize(mean, std)])
     dataset = datasets.ImageFolder('./Dataset/Images/', transform=transform_norm)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
     print('Load dataset successfully!')
 
     print('\nWarming up...')
@@ -39,6 +39,7 @@ if __name__ == '__main__':
             output = Model(images)
             torch.cuda.synchronize(device) 
             stop = timeit.default_timer()
+            print(output)
             cnt += 1
             print('Time for image',cnt,':', stop - start)
             Avg += (stop - start) / NumImg
