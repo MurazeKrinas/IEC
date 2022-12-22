@@ -29,7 +29,7 @@ def get_info(gpuStats, cpuStats, memStats):
 
         print(f'GPU: {gpuLoad}%,\tCPU: {cpuLoad}%,\tRAM: {MemUsed:.3f}/4GB')
 
-        time.sleep(0.5)
+        time.sleep(0.25)
 
 if __name__ == '__main__':
     gpuStats = []
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     t.start()
 
     try:
-        time.sleep(500)
+        time.sleep(250)
     except KeyboardInterrupt:
         avgGpu = sum(gpuStats) / len(gpuStats)
         avgCpu = sum(cpuStats) / len(cpuStats)
