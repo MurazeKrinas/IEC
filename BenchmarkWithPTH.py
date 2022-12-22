@@ -31,7 +31,7 @@ if __name__ == '__main__':
     cnt = Avg = 0
     NumImg = len(dataloader)
     for images in dataloader:    
-        images, labels = next(iter(dataloader))
+        images,_ = next(iter(dataloader))
         images = images.to(device).float()
 
         with torch.no_grad():
@@ -39,13 +39,13 @@ if __name__ == '__main__':
             output = Model(images)
             torch.cuda.synchronize(device) 
             stop = timeit.default_timer()
-            print(output)
+            #print(output)
             cnt += 1
             print('Time for image',cnt,':', stop - start)
             Avg += (stop - start) / NumImg
     print(f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second')
 
-    # f = open("Benchmark.txt", "a")
-    # s = f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second\n'
-    # f.write(s)
-    # f.close()
+    f = open("Benchmark.txt", "a")
+    s = f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second\n'
+    f.write(s)
+    f.close()

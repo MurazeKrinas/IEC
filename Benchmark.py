@@ -1,11 +1,4 @@
 from Settings import *
-Model = {
-    'arch': 'Resnet8_V4',
-    'type': np.float16(),
-    'device': 'cuda:0',
-    'batch_size': 8
-}
-
 
 def predict(batch): # result gets copied into output
     # transfer input data to device
@@ -36,15 +29,11 @@ if __name__ == '__main__':
     transform_norm = transforms.Compose([transforms.Resize((CFG['img_size'],CFG['img_size'])), transforms.ToTensor(), transforms.Normalize(mean, std)])
     dataset = datasets.ImageFolder('./Dataset/Images/', transform=transform_norm)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
-    # for Elm in dataloader:
-    #     image, label = next(iter(dataloader))
-    #     image = image.numpy().astype(np.float16)
-    #     print(image.shape)
     print('Load dataset successfully!')
 
     NumImg = len(dataloader)
     print(f'Allocating input and output memory...')
-    output = np.empty([CFG['batch_size'], 4], dtype = Model['type']) 
+    output = np.empty([CFG['batch_size'], 4], dtype = CFG['type']) 
     InputBatch,_ = next(iter(dataloader))
     InputBatch = InputBatch.numpy().astype(np.float16)
 
@@ -58,13 +47,13 @@ if __name__ == '__main__':
     num = 0
     for Elm in dataloader:
         image,_ = next(iter(dataloader))
-        image = image.numpy().astype(np.float16)
+        image = image.numpy().astype(CFG['type'])
 
         print(f'\nStart validating image {num}: ')
         start = timeit.default_timer()
         pred = predict(image)
         stop = timeit.default_timer()
-        print(pred)
+        #print(pred)
         Avg += (stop - start) / NumImg 
         num += 1
         print(f'Time for image {num}: {stop-start} second')
@@ -72,7 +61,7 @@ if __name__ == '__main__':
     print(f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second')
     
 
-    # f = open("Benchmark.txt", "a")
-    # s = f'Average validating time per image of {CFG["model_arch"]}.trt: {str(Avg)} second\n'
-    # f.write(s)
-    # f.close()'''
+    f = open("Benchmark.txt", "a")
+    s = f'Average validating time per image of {CFG["model_arch"]}.trt: {str(Avg)} second\n'
+    f.write(s)
+    f.close()
