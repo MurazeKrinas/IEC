@@ -41,7 +41,7 @@ if __name__ == '__main__':
     std = [0.229, 0.224, 0.225]
     transform_norm = transforms.Compose([transforms.Resize((CFG['img_size'],CFG['img_size'])), transforms.ToTensor(), transforms.Normalize(mean, std)])
     dataset = datasets.ImageFolder('./Dataset/Images/', transform=transform_norm)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=CFG['batch_size'], shuffle=True)
     print('Load dataset successfully!')
 
     print('\nWarming up...')
