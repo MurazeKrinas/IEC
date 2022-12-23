@@ -6,8 +6,8 @@ class CassvaImgClassifier(nn.Module):
         self.model = timm.create_model(model_arch, pretrained=pretrained)
 
         #1 efficientNet initilization
-        n_features = self.model.classifier.in_features
-        self.model.classifier = nn.Linear(n_features, n_class)
+        #n_features = self.model.classifier.in_features
+        #self.model.classifier = nn.Linear(n_features, n_class)
         
         #2 inceptionv4 initilization        
         #n_features = self.model.num_features
@@ -42,9 +42,9 @@ if __name__ == '__main__':
     #For Coat_tiny
     #torch.onnx.export(model, dummy_input, Output, opset_version=10, verbose=True)
 
-    torch.onnx.export(model, dummy_input, Output,opset_version=11, verbose=False)
+    torch.onnx.export(model, dummy_input, Output, verbose=False)
     print('Convert model to ONNX successfully!')
 
     print('Convert to TRT...')
-    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt --explicitBatch --inputIOFormats=fp16:chw --outputIOFormats=fp16:chw --fp16'
+    COMMAND = f'trtexec --onnx={Output} --saveEngine=./TRTModels/{CFG["model_arch"]}.trt --inputIOFormats=fp16:chw --outputIOFormats=fp16:chw --fp16'
     print(COMMAND)

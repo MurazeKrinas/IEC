@@ -32,18 +32,18 @@ if __name__ == '__main__':
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=CFG['batch_size'], shuffle=True)
     print('Load dataset successfully!')
 
-    NumImg = len(dataloader) * CFG['batch_size']
-    #print(NumImg)
     print(f'Allocating input and output memory...')
     output = np.empty([CFG['batch_size'], 4], dtype = CFG['type']) 
     InputBatch,_ = next(iter(dataloader))
-    InputBatch = InputBatch.numpy().astype(np.float16)
+    InputBatch = InputBatch.numpy().astype(CFG['type'])
 
-    d_input = cuda.mem_alloc(InputBatch.nbytes * NumImg)
-    d_output = cuda.mem_alloc(output.nbytes * NumImg)
+    d_input = cuda.mem_alloc(InputBatch.nbytes)
+    d_output = cuda.mem_alloc(output.nbytes)
     bindings = [int(d_input), int(d_output)]
     stream = cuda.Stream()
     print('Allocating sucessfully!')
+    stop = timeit.default_timer()
+    print(f'Preprocess: {stop - start}')
 
     print('\nWarming up...')
     for i in range(5):
@@ -51,28 +51,27 @@ if __name__ == '__main__':
         dummy_input = dummy_input.numpy().astype(CFG['type'])
         predict(dummy_input)
     print('Warm up done!')
-    stop = timeit.default_timer()
-    print(f'Preprocess: {stop - start}')
 
     Avg = 0.0
     num = 0
+    NumImg = len(dataloader) * CFG['batch_size']
+    print(f'Number of images: ~{NumImg}')
     for Elm in dataloader:
         image,_ = next(iter(dataloader))
         image = image.numpy().astype(CFG['type'])
 
-        print(f'\nStart validating image {num}: ')
+        print(f'\nStart validating iteration {num}: ')
         start = timeit.default_timer()
         pred = predict(image)
         stop = timeit.default_timer()
-        #print(pred)
+        print(pred)
         Avg += (stop - start)
         num += 1
-        print(f'Time for image {num}: {stop-start} second')
+        print(f'Time for iteration {num}: {stop-start} second')
         print('---------------------------')
 
     Avg /= NumImg
     print(f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second')
-    
 
     f = open("Benchmark.txt", "a")
     s = f'Average validating time per image of {CFG["model_arch"]}.trt: {str(Avg)} second\n'

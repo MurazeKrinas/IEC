@@ -49,8 +49,8 @@ if __name__ == '__main__':
         with torch.no_grad():
             dummy_input = torch.rand((1, 3, CFG['img_size'], CFG['img_size'])).to(device)
             Model(dummy_input)
-    print('Warm up done!')
-    torch.cuda.synchronize(device) 
+            torch.cuda.synchronize(device)
+    print('Warm up done!') 
     stop = timeit.default_timer()
     print(f'Preprocess: {stop - start}')
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
     cnt = Avg = 0
     NumImg = len(dataloader) * CFG['batch_size']
-    #print(NumImg)
+    print(f'Number of images: ~{NumImg}')
 
     for images in dataloader:    
         images,_ = next(iter(dataloader))
@@ -69,9 +69,9 @@ if __name__ == '__main__':
             output = Model(images)
             torch.cuda.synchronize(device) 
             stop = timeit.default_timer()
-            #print(output)
+            print(output)
             cnt += 1
-            print('Time for image',cnt,':', stop - start)
+            print('Time for iteration',cnt,':', stop - start)
             Avg += (stop - start)
 
     Avg /= NumImg
