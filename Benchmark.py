@@ -29,18 +29,18 @@ if __name__ == '__main__':
     std = [0.229, 0.224, 0.225]
     transform_norm = transforms.Compose([transforms.Resize((CFG['img_size'],CFG['img_size'])), transforms.ToTensor(), transforms.Normalize(mean, std)])
     dataset = datasets.ImageFolder('./Dataset/Images/', transform=transform_norm)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=CFG['batch_size'], shuffle=True)
     print('Load dataset successfully!')
 
-    NumImg = len(dataloader)
-    print(NumImg)
+    NumImg = len(dataloader) * CFG['batch_size']
+    #print(NumImg)
     print(f'Allocating input and output memory...')
     output = np.empty([CFG['batch_size'], 4], dtype = CFG['type']) 
     InputBatch,_ = next(iter(dataloader))
     InputBatch = InputBatch.numpy().astype(np.float16)
 
-    d_input = cuda.mem_alloc(InputBatch.nbytes * CFG['batch_size'] * NumImg)
-    d_output = cuda.mem_alloc(output.nbytes * CFG['batch_size'] * NumImg)
+    d_input = cuda.mem_alloc(InputBatch.nbytes * NumImg)
+    d_output = cuda.mem_alloc(output.nbytes * NumImg)
     bindings = [int(d_input), int(d_output)]
     stream = cuda.Stream()
     print('Allocating sucessfully!')
@@ -65,12 +65,12 @@ if __name__ == '__main__':
         pred = predict(image)
         stop = timeit.default_timer()
         #print(pred)
-        Avg += (stop - start) / NumImg 
+        Avg += (stop - start)
         num += 1
         print(f'Time for image {num}: {stop-start} second')
         print('---------------------------')
 
-    Avg /= CFG['batch_size']
+    Avg /= NumImg
     print(f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second')
     
 
