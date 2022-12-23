@@ -1,6 +1,7 @@
 from Settings import *
 
-def predict(batch): # result gets copied into output
+def predict(batch): # result gets copied into 
+    
     # transfer input data to device
     cuda.memcpy_htod_async(d_input, batch, stream)
     # execute model
@@ -9,7 +10,7 @@ def predict(batch): # result gets copied into output
     cuda.memcpy_dtoh_async(output, d_output, stream)
     # syncronize threads
     stream.synchronize()
-    
+
     return output
 
 if __name__ == '__main__':
@@ -33,12 +34,13 @@ if __name__ == '__main__':
     print('Load dataset successfully!')
 
     print(f'Allocating input and output memory...')
+    Iteration = len(dataloader)
     output = np.empty([CFG['batch_size'], 4], dtype = CFG['type']) 
     InputBatch,_ = next(iter(dataloader))
     InputBatch = InputBatch.numpy().astype(CFG['type'])
 
-    d_input = cuda.mem_alloc(InputBatch.nbytes)
-    d_output = cuda.mem_alloc(output.nbytes)
+    d_input = cuda.mem_alloc(InputBatch.nbytes * Iteration * CFG['batch_size'])
+    d_output = cuda.mem_alloc(output.nbytes * Iteration * CFG['batch_size'])
     bindings = [int(d_input), int(d_output)]
     stream = cuda.Stream()
     print('Allocating sucessfully!')
@@ -54,8 +56,8 @@ if __name__ == '__main__':
 
     Avg = 0.0
     num = 0
-    NumImg = len(dataloader) * CFG['batch_size']
-    print(f'Number of images: ~{NumImg}')
+    print(f"Batchsize: {CFG['batch_size']}")
+    print(f'Number of iteration: {Iteration}')
     for Elm in dataloader:
         image,_ = next(iter(dataloader))
         image = image.numpy().astype(CFG['type'])
@@ -70,7 +72,7 @@ if __name__ == '__main__':
         print(f'Time for iteration {num}: {stop-start} second')
         print('---------------------------')
 
-    Avg /= NumImg
+    Avg /= Iteration
     print(f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second')
 
     f = open("Benchmark.txt", "a")

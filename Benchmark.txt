@@ -1,2 +1,20 @@
-Average validating time per image of Resnet8_V4.pth: 0.10391781630795986 second
-Average validating time per image of Resnet8_V4.trt: 0.05482420638425258 second
+Average validating time per image of Resnet50.pth: 0.09481 second
+Average validating time per image of Resnet50.trt: 0.03363 second
+
+Average validating time per image of Resnet18.pth: 0.03767 second
+Average validating time per image of Resnet18.trt: 0.01685 second
+
+Average validating time per image of Resnet10.pth: 0.02887 second
+Average validating time per image of Resnet10.trt: 0.01541 second
+
+Average validating time per image of Resnet8_V1.pth: 0.03908 second
+Average validating time per image of Resnet8_V1.trt: 0.02638 second
+
+Average validating time per image of Resnet8_V2.pth: 0.04005 second
+Average validating time per image of Resnet8_V2.trt: 0.02132 second
+
+Average validating time per image of Resnet8_V3.pth: 0.03482 second
+Average validating time per image of Resnet8_V3.trt: 0.01584 second
+
+Average validating time per image of Resnet8_V4.pth: 0.02928 second
+Average validating time per image of Resnet8_V4.trt: 0.01049 second

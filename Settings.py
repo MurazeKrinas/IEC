@@ -29,13 +29,13 @@ from albumentations import (
           IAASharpen, IAAEmboss, RandomBrightnessContrast, Flip, OneOf, Compose, Normalize, Cutout, CoarseDropout, ShiftScaleRotate, CenterCrop, Resize
       )
 CFG = {
-    #'model_arch': 'Resnet50',
     'model_arch': 'Resnet8_V4',
     #'model_arch': 'Cait',
     #'model_arch': 'Mixer',
     #'model_arch': 'Resnet8_V3',
     #'model_arch': 'Gmlp',
     #'model_arch': 'Resnet8_V1',
+    #'model_arch': 'Resnet50',
     #'model_arch': 'Resnet18',
     #'model_arch': 'Convit_tiny',
     #'model_arch': 'Inception_v4',

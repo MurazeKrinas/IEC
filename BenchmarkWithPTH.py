@@ -48,6 +48,7 @@ if __name__ == '__main__':
     for i in range(5):
         with torch.no_grad():
             dummy_input = torch.rand((1, 3, CFG['img_size'], CFG['img_size'])).to(device)
+            torch.cuda.synchronize(device)
             Model(dummy_input)
             torch.cuda.synchronize(device)
     print('Warm up done!') 
@@ -55,10 +56,12 @@ if __name__ == '__main__':
     print(f'Preprocess: {stop - start}')
 
     print('\nStart validating...')
-    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
     cnt = Avg = 0
-    NumImg = len(dataloader) * CFG['batch_size']
-    print(f'Number of images: ~{NumImg}')
+    Iteration = len(dataloader)
+    print(f"Batchsize: {CFG['batch_size']}")
+    print(f'Number of iteration: {Iteration}')
 
     for images in dataloader:    
         images,_ = next(iter(dataloader))
@@ -66,15 +69,16 @@ if __name__ == '__main__':
 
         with torch.no_grad():
             start = timeit.default_timer()
-            output = Model(images)
             torch.cuda.synchronize(device) 
+            output = Model(images)
+            torch.cuda.synchronize(device)
             stop = timeit.default_timer()
             print(output)
             cnt += 1
             print('Time for iteration',cnt,':', stop - start)
             Avg += (stop - start)
 
-    Avg /= NumImg
+    Avg /= Iteration
     print(f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second')
 
     f = open("Benchmark.txt", "a")
