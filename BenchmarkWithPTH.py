@@ -14,8 +14,8 @@ class CassvaImgClassifier(nn.Module):
         #self.last_linear = nn.Linear(n_features, n_class)
         
         #3 resnet50 initilization        
-        n_features = self.model.num_features
-        self.fc = nn.Linear(n_features, n_class)
+        #n_features = self.model.num_features
+        #self.fc = nn.Linear(n_features, n_class)
         
         #4 MLP-mixer, gmlp_s16_224, ResMLP initilization        
         #n_features = self.model.num_features
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     print('\nStart validating...')
     torch.backends.cudnn.benchmark = True
     cnt = Avg = 0
-    NumImg = len(dataloader)
+    NumImg = len(dataloader) * CFG['batch_size']
     #print(NumImg)
 
     for images in dataloader:    
@@ -72,9 +72,9 @@ if __name__ == '__main__':
             #print(output)
             cnt += 1
             print('Time for image',cnt,':', stop - start)
-            Avg += (stop - start) / NumImg
+            Avg += (stop - start)
 
-    Avg /= CFG['batch_size']
+    Avg /= NumImg
     print(f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second')
 
     f = open("Benchmark.txt", "a")
