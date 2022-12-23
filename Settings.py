@@ -29,30 +29,33 @@ from albumentations import (
           IAASharpen, IAAEmboss, RandomBrightnessContrast, Flip, OneOf, Compose, Normalize, Cutout, CoarseDropout, ShiftScaleRotate, CenterCrop, Resize
       )
 CFG = {
-    'model_arch': 'Resnet8_V4',
-    #'model_arch': 'Cait',
-    #'model_arch': 'Mixer',
-    #'model_arch': 'Resnet8_V3',
-    #'model_arch': 'Gmlp',
-    #'model_arch': 'Resnet8_V1',
-    #'model_arch': 'Resnet50',
-    #'model_arch': 'Resnet18',
-    #'model_arch': 'Convit_tiny',
-    #'model_arch': 'Inception_v4',
-    #'model_arch': 'Resnet8_V2',
-    #'model_arch': 'Coat_tiny',
-    #'model_arch': 'Resnet10',
-    #'model_arch': 'Vit',
-    #'model_arch': 'Tf_efficientnet',
-    #'model_arch': 'Deit',
-    #'model_arch': 'Resmlp',
+    #'model_arch': 'Convit_tiny', #OK but just ONNX :(
+    #'model_arch': 'Coat_tiny', #OK but just ONNX :(
+    #'model_arch': 'Tf_efficientnet', #OK but just ONNX :(
+    
+    'model_arch': 'Resnet8_V4', #OK :)
+    #'model_arch': 'Resnet8_V3', #OK :)
+    #'model_arch': 'Resnet8_V2', #OK :)
+    #'model_arch': 'Resnet8_V1', #OK :)
+    #'model_arch': 'Resnet10', #OK :)
+    #'model_arch': 'Resnet18', #OK :)
+    #'model_arch': 'Resnet50', #OK :)
+    #'model_arch': 'Inception_v4', #OK :)
+    #'model_arch': 'Gmlp', #OK :)
+    #'model_arch': 'Mixer', #OK :)
+    #'model_arch': 'Cait', #OK :)
+    
+    #'model_arch': 'Deit', #Killed
+    #'model_arch': 'Vit', #Killed
+    #'model_arch': 'Resmlp', #Operator not supported
+    
     'type': np.float16,
     'fold_num': 4,
     'seed': 719,
     'numclass': 4,
-    'img_size': 112,
+    'img_size': 224,
     'epochs': 100,
-    'batch_size': 4,
+    'batch_size': 2,
     'train_bs': 32,
     'valid_bs': 32,
     'T_0': 10,

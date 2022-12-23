@@ -18,8 +18,8 @@ class CassvaImgClassifier(nn.Module):
         #self.fc = nn.Linear(n_features, n_class)
         
         #4 MLP-mixer, gmlp_s16_224, ResMLP initilization        
-        #n_features = self.model.num_features
-        #self.head = nn.Linear(n_features, n_class)  
+        n_features = self.model.num_features
+        self.head = nn.Linear(n_features, n_class)  
         
         #ViT, Deit, CaiT, Coat, ConViT initilization
         #self.model.head = nn.Linear(self.model.head.in_features, n_class)

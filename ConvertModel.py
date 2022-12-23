@@ -38,8 +38,8 @@ if __name__ == '__main__':
     dummy_input=torch.randn(CFG['batch_size'], 3, CFG['img_size'], CFG['img_size']).to(device)
 
     Output = f'./ONNXModels/{CFG["model_arch"]}.onnx'
-
-    torch.onnx.export(model, dummy_input, Output, opset_version=10, do_constant_folding=True, export_params=True, verbose=True)
+    
+    torch.onnx.export(model, dummy_input, Output, opset_version=11, do_constant_folding=True, export_params=True, verbose=True)
     print('Convert model to ONNX successfully!')
 
     print('Convert to TRT...')
