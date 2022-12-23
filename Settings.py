@@ -6,6 +6,7 @@ import pycuda.driver as cuda
 import pycuda.autoinit
 import fnmatch
 import tensorrt as trt
+import timm
 import torch
 from torchvision import transforms
 from torchvision import datasets
@@ -29,12 +30,22 @@ from albumentations import (
       )
 CFG = {
     #'model_arch': 'Resnet50',
-    #'model_arch': 'Resnet18',
-    #'model_arch': 'Resnet10',
-    #'model_arch': 'Resnet8_V1',
-    #'model_arch': 'Resnet8_V2',
-    #'model_arch': 'Resnet8_V3',
     'model_arch': 'Resnet8_V4',
+    #'model_arch': 'Cait',
+    #'model_arch': 'Mixer',
+    #'model_arch': 'Resnet8_V3',
+    #'model_arch': 'Gmlp',
+    #'model_arch': 'Resnet8_V1',
+    #'model_arch': 'Resnet18',
+    #'model_arch': 'Convit_tiny',
+    #'model_arch': 'Inception_v4',
+    #'model_arch': 'Resnet8_V2',
+    #'model_arch': 'Coat_tiny',
+    #'model_arch': 'Resnet10',
+    #'model_arch': 'Vit',
+    #'model_arch': 'Tf_efficientnet',
+    #'model_arch': 'Deit',
+    #'model_arch': 'Resmlp',
     'type': np.float16(),
     'fold_num': 4,
     'seed': 719,

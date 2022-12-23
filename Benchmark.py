@@ -13,6 +13,7 @@ def predict(batch): # result gets copied into output
     return output
 
 if __name__ == '__main__':
+    start = timeit.default_timer()
     print('Start loading model...')
     PATH = f'./TRTModels/{CFG["model_arch"]}.trt'
     f = open(PATH, "rb")
@@ -32,16 +33,26 @@ if __name__ == '__main__':
     print('Load dataset successfully!')
 
     NumImg = len(dataloader)
+    print(NumImg)
     print(f'Allocating input and output memory...')
     output = np.empty([CFG['batch_size'], 4], dtype = CFG['type']) 
     InputBatch,_ = next(iter(dataloader))
     InputBatch = InputBatch.numpy().astype(np.float16)
 
-    d_input = cuda.mem_alloc(InputBatch.nbytes)
-    d_output = cuda.mem_alloc(output.nbytes)
+    d_input = cuda.mem_alloc(InputBatch.nbytes * CFG['batch_size'] * NumImg)
+    d_output = cuda.mem_alloc(output.nbytes * CFG['batch_size'] * NumImg)
     bindings = [int(d_input), int(d_output)]
     stream = cuda.Stream()
     print('Allocating sucessfully!')
+
+    print('\nWarming up...')
+    for i in range(5):
+        dummy_input = torch.rand((1, 3, CFG['img_size'], CFG['img_size']))
+        dummy_input = dummy_input.numpy().astype(CFG['type'])
+        predict(dummy_input)
+    print('Warm up done!')
+    stop = timeit.default_timer()
+    print(f'Preprocess: {stop - start}')
 
     Avg = 0.0
     num = 0
@@ -58,6 +69,8 @@ if __name__ == '__main__':
         num += 1
         print(f'Time for image {num}: {stop-start} second')
         print('---------------------------')
+
+    Avg /= CFG['batch_size']
     print(f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second')
     
 
