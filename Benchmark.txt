@@ -75,6 +75,7 @@ Average validating time per image of Resnet8_V3.trt: 0.0216827781999973 second
 Preprocess: 6.251928901999918
 Avg GPU: 32.931%,	Avg CPU: 31.419%,	Avg Mem: 1.962/4GB
 
+
 Average validating time per image of Resnet8_V4.pth: 0.028900462159986092 second
 Preprocess: 11.939405014000158
 Avg GPU: 38.352%,	Avg CPU: 30.165%,	Avg Mem: 2.432/4GB
