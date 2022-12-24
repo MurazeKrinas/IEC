@@ -44,8 +44,6 @@ if __name__ == '__main__':
     bindings = [int(d_input), int(d_output)]
     stream = cuda.Stream()
     print('Allocating sucessfully!')
-    stop = timeit.default_timer()
-    print(f'Preprocess: {stop - start}')
 
     print('\nWarming up...')
     for i in range(5):
@@ -53,6 +51,9 @@ if __name__ == '__main__':
         dummy_input = dummy_input.numpy().astype(CFG['type'])
         predict(dummy_input)
     print('Warm up done!')
+    stop = timeit.default_timer()
+    Preprocess = stop - start
+    print(f'Preprocess: {Preprocess}')
 
     Avg = 0.0
     num = 0
@@ -76,6 +77,6 @@ if __name__ == '__main__':
     print(f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second')
 
     f = open("Benchmark.txt", "a")
-    s = f'Average validating time per image of {CFG["model_arch"]}.trt: {str(Avg)} second\n'
+    s = f'Average validating time per image of {CFG["model_arch"]}.trt: {Avg} second\nPreprocess: {Preprocess}\n'
     f.write(s)
     f.close()

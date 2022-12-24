@@ -1,8 +1,83 @@
-Average validating time per image of Gmlp.pth: 0.2361959840999907 second
-Average validating time per image of Gmlp.trt: 0.20057071472001098 second
+Average validating time per image of Cait.pth: 0.7035983392799983 second
+Preprocess: 43.14302914699999
+Avg GPU: 70.326%,	Avg CPU: 18.236%,	Avg Mem: 2.863/4GB
+Average validating time per image of Cait.trt: 0.4426074521399994 second
+Preprocess: 16.002328619999957
+Avg GPU: 76.987%,	Avg CPU: 14.087%,	Avg Mem: 2.234/4GB
 
-Average validating time per image of Inception_v4.pth: 0.2997958833599978 second
-Average validating time per image of Inception_v4.trt: 0.09332473231999756 second
 
-Average validating time per image of Resnet8_V4.pth: 0.030321503300019686 second
-Average validating time per image of Resnet8_V4.trt: 0.017923956980002913 second
+Average validating time per image of Mixer.pth: 0.42015723651999903 second
+Preprocess: 37.25911587500002
+Avg GPU: 62.249%,	Avg CPU: 15.056%,	Avg Mem: 3.111/4GB
+Average validating time per image of Mixer.trt: 0.236904692720002 second
+Preprocess: 12.336620929999981
+Avg GPU: 67.068%,	Avg CPU: 18.316%,	Avg Mem: 2.157/4GB
+
+
+Average validating time per image of Gmlp.pth: 0.2310433281799942 second
+Preprocess: 27.834221747000015
+Avg GPU: 73.666%,	Avg CPU: 18.414%,	Avg Mem: 2.981/4GB
+Average validating time per image of Gmlp.trt: 0.20041439352000906 second
+Preprocess: 10.890244003999896
+Avg GPU: 55.811%,	Avg CPU: 23.105%,	Avg Mem: 2.379/4GB
+
+
+Average validating time per image of Inception_v4.pth: 0.30388496829998984 second
+Preprocess: 29.807031571000152
+Avg GPU: 52.707%,	Avg CPU: 20.679%,	Avg Mem: 2.658/4GB
+Average validating time per image of Inception_v4.trt: 0.09335650427999098 second
+Preprocess: 9.647708539000178
+Avg GPU: 45.035%,	Avg CPU: 22.738%,	Avg Mem: 2.023/4GB
+
+
+Average validating time per image of Resnet50.pth: 0.16854412715999387 second
+Preprocess: 27.808790889999955
+Avg GPU: 44.614%,	Avg CPU: 20.635%,	Avg Mem: 2.561/4GB
+Average validating time per image of Resnet50.trt: 0.05233222790000127 second
+Preprocess: 8.863375170999916
+Avg GPU: 30.238%,	Avg CPU: 25.463%,	Avg Mem: 1.968/4GB
+
+
+Average validating time per image of Resnet18.pth: 0.05724831813999117 second
+Preprocess: 25.03207471099995
+Avg GPU: 36.463%,	Avg CPU: 21.872%,	Avg Mem: 2.424/4GB
+Average validating time per image of Resnet18.trt: 0.023015034019990707 second
+Preprocess: 7.729090268999926
+Avg GPU: 28.426%,	Avg CPU: 26.123%,	Avg Mem: 1.888/4GB
+
+
+Average validating time per image of Resnet10.pth: 0.03423689950000607 second
+Preprocess: 22.982436776999975
+Avg GPU: 27.489%,	Avg CPU: 24.143%,	Avg Mem: 2.391/4GB
+Average validating time per image of Resnet10.trt: 0.022404830740010765 second
+Preprocess: 7.23914286299987
+Avg GPU: 29.344%,	Avg CPU: 28.286%,	Avg Mem: 1.988/4GB
+
+Average validating time per image of Resnet8_V1.pth: 0.028577274579984078 second
+Preprocess: 22.478078148000122
+Avg GPU: 24.966%,	Avg CPU: 23.431%,	Avg Mem: 2.451/4GB
+Average validating time per image of Resnet8_V1.trt: 0.018414022120009577 second
+Preprocess: 7.953604400000131
+Avg GPU: 26.885%,	Avg CPU: 28.365%,	Avg Mem: 1.979/4GB
+
+Average validating time per image of Resnet8_V2.pth: 0.052089684500001565 second
+Preprocess: 19.087109357999907
+Avg GPU: 42.087%,	Avg CPU: 26.236%,	Avg Mem: 2.532/4GB
+Average validating time per image of Resnet8_V2.trt: 0.02399482749998697 second
+Preprocess: 7.3056561979999515
+Avg GPU: 26.721%,	Avg CPU: 27.913%,	Avg Mem: 1.904/4GB
+
+
+Average validating time per image of Resnet8_V3.pth: 0.039542742480002745 second
+Preprocess: 14.698066060999963
+Avg GPU: 38.398%,	Avg CPU: 27.000%,	Avg Mem: 2.457/4GB
+Average validating time per image of Resnet8_V3.trt: 0.0216827781999973 second
+Preprocess: 6.251928901999918
+Avg GPU: 32.931%,	Avg CPU: 31.419%,	Avg Mem: 1.962/4GB
+
+Average validating time per image of Resnet8_V4.pth: 0.028900462159986092 second
+Preprocess: 11.939405014000158
+Avg GPU: 38.352%,	Avg CPU: 30.165%,	Avg Mem: 2.432/4GB
+Average validating time per image of Resnet8_V4.trt: 0.01654029033997176 second
+Preprocess: 6.086928797999917
+Avg GPU: 27.705%,	Avg CPU: 29.597%,	Avg Mem: 1.922/4GB

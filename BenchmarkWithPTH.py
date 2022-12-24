@@ -53,7 +53,8 @@ if __name__ == '__main__':
             torch.cuda.synchronize(device)
     print('Warm up done!') 
     stop = timeit.default_timer()
-    print(f'Preprocess: {stop - start}')
+    Preprocess = stop - start
+    print(f'Preprocess: {Preprocess}')
 
     print('\nStart validating...')
     torch.backends.cudnn.benchmark = False
@@ -82,6 +83,6 @@ if __name__ == '__main__':
     print(f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second')
 
     f = open("Benchmark.txt", "a")
-    s = f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second\n'
+    s = f'Average validating time per image of {CFG["model_arch"]}.pth: {Avg} second\nPreprocess: {Preprocess}\n'
     f.write(s)
     f.close()
