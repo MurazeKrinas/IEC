@@ -19,7 +19,6 @@ if __name__ == '__main__':
     folds = StratifiedKFold(n_splits=CFG['fold_num'], shuffle=True, random_state=CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
     print('Read file CSV successfully!')
 
-    
     for fold, (trn_idx, val_idx) in enumerate(folds):
         # if fold > 0:
         #     break
@@ -37,9 +36,13 @@ if __name__ == '__main__':
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
             with torch.no_grad():
+                StopHere = False
                 print('\nEVALUATING TRAINING ACCURACY...')
-                EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device)
+                EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, StopHere)
                 print('\nEVALUATING VALIDATION ACCURACY...')
-                EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device)
+                EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, StopHere)
                 print('\n--------------------------------------------\n')
-
+                
+                if StopHere:
+                  print(f'Epoch: {epoch}')
+                  break;
