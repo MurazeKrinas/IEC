@@ -2,11 +2,11 @@ import sklearn
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
-import pycuda.driver as cuda
-import pycuda.autoinit
+#import pycuda.driver as cuda
+#import pycuda.autoinit
 import fnmatch
-import tensorrt as trt
-import timm
+#import tensorrt as trt
+#import timm
 import torch
 from torchvision import transforms
 from torchvision import datasets
@@ -293,18 +293,14 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, StopHere
             early_stopping(loss_sum/sample_num, model)
             if early_stopping.early_stop:
                 print('EARLY STOP!')
-                print(f'=> Validating accuracy: {(image_preds_all==image_targets_all).mean()}%')
-                
                 StopHere = True
-                ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
-                torch.save(Model, ExportPATH)
-                print('Save model successfull!')
           
         if scheduler is not None:
             if schd_loss_update:
                 scheduler.step(loss_sum/sample_num)
             else:
                 scheduler.step()
+        return (image_preds_all==image_targets_all).mean()
 
 def seed_everything(seed):
     random.seed(seed)
