@@ -13,6 +13,7 @@ from torchvision import datasets
 from torch import nn
 import torch.nn as nn
 import torch.onnx
+from EarlyStopping import EarlyStopping
 import pandas as pd
 import random
 import numpy as np
@@ -54,7 +55,7 @@ CFG = {
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
-    'epochs': 100,
+    'epochs': 1000,
     'batch_size': 2,
     'train_bs': 32,
     'valid_bs': 32,
@@ -162,7 +163,6 @@ class Dataset():
 
 def get_valid_transforms():
         return Compose([
-                CenterCrop(CFG['img_size'], CFG['img_size'], p=1.),
                 Resize(CFG['img_size'], CFG['img_size']),
                 Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=255.0, p=1.0),
                 ToTensorV2(p=1.0),
@@ -289,14 +289,21 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, schedule
         else:
             print('Validation loss', loss_sum/sample_num, epoch + fold*33)
             print('Validation accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
+            
+            EarlyStopping(loss_sum/sample_num)
+            if EarlyStopping.early_stop:
+                print('EARLY STOP!')
+                print(f'=> Validating accuracy: {(image_preds_all==image_targets_all).mean()}%')
+                
+                ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
+                torch.save(Model, ExportPATH)
+                print('Save model successfull!')
           
         if scheduler is not None:
             if schd_loss_update:
                 scheduler.step(loss_sum/sample_num)
             else:
                 scheduler.step()
-                
-        return ((image_preds_all==image_targets_all).mean() / CFG['epochs'])
 
 def seed_everything(seed):
     random.seed(seed)
@@ -305,7 +312,7 @@ def seed_everything(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.benchmark = False
 
 def SplitData():
     Train = pd.read_csv('./Dataset/Train.csv')
