@@ -13,7 +13,7 @@ from torchvision import datasets
 from torch import nn
 import torch.nn as nn
 import torch.onnx
-from EarlyStopping import EarlyStopping
+from Tools import EarlyStopping
 import pandas as pd
 import random
 import numpy as np
@@ -250,7 +250,7 @@ def TrainModel(epoch, model, loss_fn, optimizer, train_loader, device, scheduler
         if scheduler is not None and not schd_batch_update:
            scheduler.step()
     
-def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, scheduler=None, schd_loss_update=False):
+def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, StopHere, scheduler=None, schd_loss_update=False, early_stopping = EarlyStopping()):
         model.eval()
 
         loss_sum = 0
@@ -290,11 +290,12 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, schedule
             print('Validation loss', loss_sum/sample_num, epoch + fold*33)
             print('Validation accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
             
-            EarlyStopping(loss_sum/sample_num)
-            if EarlyStopping.early_stop:
+            early_stopping(loss_sum/sample_num, model)
+            if early_stopping.early_stop:
                 print('EARLY STOP!')
                 print(f'=> Validating accuracy: {(image_preds_all==image_targets_all).mean()}%')
                 
+                StopHere = True
                 ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
                 torch.save(Model, ExportPATH)
                 print('Save model successfull!')
