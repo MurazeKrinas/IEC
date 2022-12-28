@@ -293,7 +293,7 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, StopHere
             early_stopping(loss_sum/sample_num, model)
             if early_stopping.early_stop:
                 print('EARLY STOP!')
-                StopHere = True
+                StopHere = 'True'
           
         if scheduler is not None:
             if schd_loss_update:
