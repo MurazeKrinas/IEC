@@ -1,5 +1,4 @@
 from Resnet import *
-#from pthflops import count_ops 
 
 if __name__ == '__main__':
     print('Start building Model...')
@@ -35,21 +34,19 @@ if __name__ == '__main__':
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
             with torch.no_grad():
-                StopHere = 'False'
+                StopHere = [False]
                 print('\nEVALUATING TRAINING ACCURACY...')
                 TrainingAccuracy.append(EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, StopHere))
                 print('\nEVALUATING VALIDATION ACCURACY...')
                 ValidAccuracy.append(EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, StopHere))
                 print('\n--------------------------------------------\n')
                 
-                if StopHere == 'True':
-                  f.write(f'Fold {fold} - Epochs {epoch}\n')
-                  f.write(f'Training accuracy: {mean(TrainingAccuracy)}\n')
-                  f.write(f'Validating accuracy: {mean(ValidAccuracy)}')
-                  print('\n--------------------------------------------\n')
-                  ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
-                  torch.save(Model, ExportPATH)
-                  print('Save model successfull!')
-                  break;
-
-
+                if StopHere[0]:
+                    f.write(f'Fold {fold} - Epochs {epoch}\n')
+                    f.write(f'Training accuracy: {mean(TrainingAccuracy)}\n')
+                    f.write(f'Validating accuracy: {mean(ValidAccuracy)}\n')
+                    ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
+                    torch.save(Model, ExportPATH)
+                    print('Save model successfull!')
+                    print('\n--------------------------------------------\n')
+                    break

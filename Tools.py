@@ -36,4 +36,4 @@ class EarlyStopping:
                 self.early_stop = True
         else:
             self.best_score = score
-            self.counter = 0
+            self.counter = int(self.counter / 2)

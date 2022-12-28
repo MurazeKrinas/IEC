@@ -2,9 +2,9 @@ import sklearn
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
+import fnmatch
 #import pycuda.driver as cuda
 #import pycuda.autoinit
-import fnmatch
 #import tensorrt as trt
 #import timm
 import torch
@@ -16,6 +16,7 @@ import torch.onnx
 from Tools import EarlyStopping
 import pandas as pd
 import random
+from statistics import mean
 import numpy as np
 import cv2
 from tqdm import tqdm
@@ -293,7 +294,8 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, StopHere
             early_stopping(loss_sum/sample_num, model)
             if early_stopping.early_stop:
                 print('EARLY STOP!')
-                StopHere = 'True'
+                StopHere[0] = True
+                early_stopping.__init__()
           
         if scheduler is not None:
             if schd_loss_update:
