@@ -35,14 +35,14 @@ if __name__ == '__main__':
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
             with torch.no_grad():
-                StopHere = False
+                StopHere = 'False'
                 print('\nEVALUATING TRAINING ACCURACY...')
                 TrainingAccuracy.append(EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, StopHere))
                 print('\nEVALUATING VALIDATION ACCURACY...')
                 ValidAccuracy.append(EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, StopHere))
                 print('\n--------------------------------------------\n')
                 
-                if StopHere:
+                if StopHere == 'True':
                   f.write(f'Fold {fold} - Epochs {epoch}\n')
                   f.write(f'Training accuracy: {mean(TrainingAccuracy)}\n')
                   f.write(f'Validating accuracy: {mean(ValidAccuracy)}')
