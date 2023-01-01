@@ -52,7 +52,7 @@ CFG = {
     #'model_arch': 'Resmlp', #Operator not supported
     
     'type': np.float16,
-    'fold_num': 4,
+    'fold_num': 5,
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
