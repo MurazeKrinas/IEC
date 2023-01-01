@@ -280,16 +280,15 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, early_st
         image_preds_all = np.concatenate(image_preds_all)
         image_targets_all = np.concatenate(image_targets_all)
         
-        print('Validation multi-class accuracy = {:.4f}'.format((image_preds_all==image_targets_all).mean()))
         print ("Classification report: ", (classification_report(image_targets_all, image_preds_all)))
         print ("F1 micro averaging:",(f1_score(image_targets_all, image_preds_all, average='micro')))
         
         if isTrain == True:
             print('Training loss', loss_sum/sample_num, epoch + fold*33)
-            print('Training accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
+            print('Training accuracy', (image_preds_all==image_targets_all).mean())
         else:
             print('Validation loss', loss_sum/sample_num, epoch + fold*33)
-            print('Validation accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
+            print('Validation accuracy', (image_preds_all==image_targets_all).mean())
             early_stopping(loss_sum/sample_num, model, fold)
           
         if scheduler is not None:

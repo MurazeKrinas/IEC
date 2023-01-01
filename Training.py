@@ -35,13 +35,17 @@ if __name__ == '__main__':
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
             with torch.no_grad():
-                StopHere = [False]
                 print('\nEVALUATING TRAINING ACCURACY...')
-                TrainingAccuracy.append(EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, early_stopping))
+                TrainAcc = EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, early_stopping)
                 print('\nEVALUATING VALIDATION ACCURACY...')
-                ValidAccuracy.append(EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, early_stopping))
+                ValidAcc = EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, early_stopping)
                 print('\n--------------------------------------------\n')
                 
+                if early_stopping.isSaved:
+                    TrainingAccuracy.append(TrainAcc)
+                    ValidAccuracy.append(ValidAcc)
+                    early_stopping.isSaved = False
+        
                 if early_stopping.early_stop:
                     print('EARLY STOP! SAVED MODEL SUCCESSFULLY...')
                     print('')
