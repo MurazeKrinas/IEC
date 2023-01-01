@@ -251,7 +251,7 @@ def TrainModel(epoch, model, loss_fn, optimizer, train_loader, device, scheduler
         if scheduler is not None and not schd_batch_update:
            scheduler.step()
     
-def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, StopHere, scheduler=None, schd_loss_update=False, early_stopping = EarlyStopping()):
+def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, early_stopping, scheduler=None, schd_loss_update=False):
         model.eval()
 
         loss_sum = 0
@@ -290,12 +290,7 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, StopHere
         else:
             print('Validation loss', loss_sum/sample_num, epoch + fold*33)
             print('Validation accuracy', (image_preds_all==image_targets_all).mean(), epoch + fold*33)
-            
-            early_stopping(loss_sum/sample_num, model)
-            if early_stopping.early_stop:
-                print('EARLY STOP!')
-                StopHere[0] = True
-                early_stopping.__init__()
+            early_stopping(loss_sum/sample_num, model, fold)
           
         if scheduler is not None:
             if schd_loss_update:

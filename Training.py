@@ -31,22 +31,27 @@ if __name__ == '__main__':
         loss_tr = loss_fn = nn.CrossEntropyLoss().to(Device)
         TrainingAccuracy = []
         ValidAccuracy = []
+        early_stopping = EarlyStopping()
         for epoch in range(CFG['epochs']):
             TrainModel(epoch, Model, loss_tr, optimizer, train_loader, Device, scheduler=scheduler, schd_batch_update=False)
             with torch.no_grad():
                 StopHere = [False]
                 print('\nEVALUATING TRAINING ACCURACY...')
-                TrainingAccuracy.append(EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, StopHere))
+                TrainingAccuracy.append(EvalModel(True, fold, epoch, Model, loss_fn, train_loader, Device, early_stopping))
                 print('\nEVALUATING VALIDATION ACCURACY...')
-                ValidAccuracy.append(EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, StopHere))
+                ValidAccuracy.append(EvalModel(False, fold, epoch, Model, loss_fn, val_loader, Device, early_stopping))
                 print('\n--------------------------------------------\n')
                 
-                if StopHere[0]:
+                if early_stopping.early_stop:
+                    print('EARLY STOP! SAVED MODEL SUCCESSFULLY...')
+                    print('')
+                    print(f'Fold {fold} - Epochs {epoch}\n')
+                    print(f'Training accuracy: {mean(TrainingAccuracy)}\n')
+                    print(f'Validating accuracy: {mean(ValidAccuracy)}\n')
+                    print('\n--------------------------------------------\n')
+
                     f.write(f'Fold {fold} - Epochs {epoch}\n')
                     f.write(f'Training accuracy: {mean(TrainingAccuracy)}\n')
                     f.write(f'Validating accuracy: {mean(ValidAccuracy)}\n')
-                    ExportPATH = f'./PTHModels/{CFG["model_arch"]}_fold{fold}.pth'
-                    torch.save(Model, ExportPATH)
-                    print('Save model successfull!')
-                    print('\n--------------------------------------------\n')
+                    f.write('\n--------------------------------------------\n')
                     break
