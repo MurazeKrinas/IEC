@@ -30,7 +30,7 @@ if __name__ == '__main__':
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=CFG['T_0'], T_mult=1, eta_min=CFG['min_lr'], last_epoch=-1)
         
         loss_tr = loss_fn = nn.CrossEntropyLoss().to(Device)
-        TrainingAccuracy = []
+        TrainingAccuracy = [0]
         ValidAccuracy = []
         early_stopping = EarlyStopping()
         for epoch in range(CFG['epochs']):
@@ -55,13 +55,15 @@ if __name__ == '__main__':
         
                 if early_stopping.early_stop:
                     print('=> EARLY STOP! SAVED MODEL SUCCESSFULLY...')
-                    print('')
+                    print(f'=> Minimum validating loss: {early_stopping.best_score}')
                     print(f'=> Fold {fold} - Epochs {epoch}\n')
+                    print(f'=> Minimum validating loss: {early_stopping.best_score}')
                     print(f'=> Training accuracy: {max(TrainingAccuracy)}\n')
                     print(f'=> Validating accuracy: {mean(ValidAccuracy)}\n')
                     print('\n=================================================\n\n')
 
                     f.write(f'Fold {fold} - Epochs {epoch}\n')
+                    f.write(f'Minimum validating loss: {early_stopping.best_score}\n')
                     f.write(f'Training accuracy: {max(TrainingAccuracy)}\n')
                     f.write(f'Validating accuracy: {mean(ValidAccuracy)}\n')
                     f.write('\n--------------------------------------------\n')

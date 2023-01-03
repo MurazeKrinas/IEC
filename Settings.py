@@ -1,12 +1,13 @@
+#import setGPU
 import sklearn
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 import fnmatch
-#import pycuda.driver as cuda
-#import pycuda.autoinit
-#import tensorrt as trt
-#import timm
+import pycuda.driver as cuda
+import pycuda.autoinit
+import tensorrt as trt
+import timm
 import torch
 from torchvision import transforms
 from torchvision import datasets
@@ -16,13 +17,13 @@ import torch.onnx
 from Tools import EarlyStopping
 import pandas as pd
 import random
-from statistics import mean
 import numpy as np
 import cv2
 from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 import os
 import timeit
+from statistics import mean
 from albumentations.pytorch import ToTensorV2
 from albumentations import (
           HorizontalFlip, VerticalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
@@ -52,7 +53,7 @@ CFG = {
     #'model_arch': 'Resmlp', #Operator not supported
     
     'type': np.float16,
-    'fold_num': 5,
+    'fold_num': 10,
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
@@ -284,10 +285,10 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, early_st
         print ("F1 micro averaging:",(f1_score(image_targets_all, image_preds_all, average='micro')))
         
         if isTrain == True:
-            print('Training loss', loss_sum/sample_num, epoch + fold*33)
+            print('Training loss', loss_sum/sample_num)
             print('Training accuracy', (image_preds_all==image_targets_all).mean())
         else:
-            print('Validation loss', loss_sum/sample_num, epoch + fold*33)
+            print('Validation loss', loss_sum/sample_num)
             print('Validation accuracy', (image_preds_all==image_targets_all).mean())
             early_stopping(loss_sum/sample_num, model, fold)
           
