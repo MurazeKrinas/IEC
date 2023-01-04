@@ -19,6 +19,7 @@ if __name__ == '__main__':
     print('\n=================================================\n\n')
     
     f = open("TrainingResult.txt","a")
+    ValidAccuracy = []
     for fold, (trn_idx, val_idx) in enumerate(folds):
         print(f'\n* Start training with fold {fold}...')
         print(f'* Length train and valid index: {len(trn_idx)} - {len(val_idx)}')
@@ -31,7 +32,6 @@ if __name__ == '__main__':
         
         loss_tr = loss_fn = nn.CrossEntropyLoss().to(Device)
         TrainingAccuracy = [0]
-        ValidAccuracy = []
         early_stopping = EarlyStopping()
         for epoch in range(CFG['epochs']):
             print('=================================================')
