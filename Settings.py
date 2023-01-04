@@ -4,10 +4,10 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 import fnmatch
-#import pycuda.driver as cuda
-#import pycuda.autoinit
-#import tensorrt as trt
-#import timm
+import pycuda.driver as cuda
+import pycuda.autoinit
+import tensorrt as trt
+import timm
 import torch
 from torchvision import transforms
 from torchvision import datasets

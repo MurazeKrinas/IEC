@@ -1,0 +1,60 @@
+Fold 0 - Epochs 149
+Minimum validating loss: 0.12746650658587888
+Training accuracy: 0.9386942675159236
+Validating accuracy: 0.9204455051710422
+
+--------------------------------------------
+Fold 1 - Epochs 21
+Minimum validating loss: 0.11479113503986622
+Training accuracy: 0.9320594479830149
+Validating accuracy: 0.9474940334128878
+
+--------------------------------------------
+Fold 2 - Epochs 30
+Minimum validating loss: 0.10557635233910902
+Training accuracy: 0.9429405520169851
+Validating accuracy: 0.9577224684623252
+
+--------------------------------------------
+Fold 3 - Epochs 37
+Minimum validating loss: 0.07603472777014945
+Training accuracy: 0.9524946921443737
+Validating accuracy: 0.967780429594272
+
+--------------------------------------------
+Fold 4 - Epochs 37
+Minimum validating loss: 0.09574208809851907
+Training accuracy: 0.9575371549893843
+Validating accuracy: 0.9652233208319128
+
+--------------------------------------------
+Fold 5 - Epochs 25
+Minimum validating loss: 0.07118803163861738
+Training accuracy: 0.9546178343949044
+Validating accuracy: 0.9689737470167065
+
+--------------------------------------------
+Fold 6 - Epochs 39
+Minimum validating loss: 0.06208904151780295
+Training accuracy: 0.9570063694267515
+Validating accuracy: 0.9747016706443914
+
+--------------------------------------------
+Fold 7 - Epochs 31
+Minimum validating loss: 0.05694159002489055
+Training accuracy: 0.9551605200318387
+Validating accuracy: 0.9824561403508771
+
+--------------------------------------------
+Fold 8 - Epochs 36
+Minimum validating loss: 0.07224994733134223
+Training accuracy: 0.9607322897320244
+Validating accuracy: 0.9704944178628389
+
+--------------------------------------------
+Fold 9 - Epochs 27
+Minimum validating loss: 0.07082264996066903
+Training accuracy: 0.9652427699655081
+Validating accuracy: 0.97188995215311
+
+--------------------------------------------
