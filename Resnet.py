@@ -104,6 +104,7 @@ class ResNet(nn.Module):
         self.bn1 = norm_layer(self.inplanes)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        self.drop = nn.Dropout(0.25)
 
         self.layer1 = self.layer2 = self.layer3 = self.layer4 = None
         if (layers[0] != 0):
@@ -169,6 +170,7 @@ class ResNet(nn.Module):
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
+        x = self.drop(x)
         x = self.fc(x)
 
         return x

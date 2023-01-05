@@ -25,12 +25,7 @@ import os
 import timeit
 from statistics import mean
 from albumentations.pytorch import ToTensorV2
-from albumentations import (
-          HorizontalFlip, VerticalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
-          Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue,
-          IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, IAAPiecewiseAffine, RandomResizedCrop,
-          IAASharpen, IAAEmboss, RandomBrightnessContrast, Flip, OneOf, Compose, Normalize, Cutout, CoarseDropout, ShiftScaleRotate, CenterCrop, Resize
-      )
+from albumentations import (Compose, Normalize, Resize)
 CFG = {
     #'model_arch': 'Convit_tiny', #OK but just ONNX :(
     #'model_arch': 'Coat_tiny', #OK but just ONNX :(
@@ -57,7 +52,7 @@ CFG = {
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
-    'epochs': 1000,
+    'epochs': 10000,
     'batch_size': 2,
     'train_bs': 32,
     'valid_bs': 32,
@@ -163,25 +158,10 @@ class Dataset():
         else:
             return img
 
-def get_valid_transforms():
+def get_transforms():
         return Compose([
                 Resize(CFG['img_size'], CFG['img_size']),
                 Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=255.0, p=1.0),
-                ToTensorV2(p=1.0),
-            ], p=1.)
-
-def get_train_transforms():
-        return Compose([
-                RandomResizedCrop(CFG['img_size'], CFG['img_size']),
-                Transpose(p=0.5),
-                HorizontalFlip(p=0.5),
-                VerticalFlip(p=0.5),
-                ShiftScaleRotate(p=0.5),
-                HueSaturationValue(hue_shift_limit=0.2, sat_shift_limit=0.2, val_shift_limit=0.2, p=0.5),
-                RandomBrightnessContrast(brightness_limit=(-0.1,0.1), contrast_limit=(-0.1, 0.1), p=0.5),
-                Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=255.0, p=1.0),
-                CoarseDropout(p=0.5),
-                Cutout(p=0.5),
                 ToTensorV2(p=1.0),
             ], p=1.)
 
@@ -190,23 +170,24 @@ def prepare_dataloader(df, trn_idx, val_idx, data_root='./Dataset/CornDataset'):
         train_ = df.loc[trn_idx,:].reset_index(drop=True)
         valid_ = df.loc[val_idx,:].reset_index(drop=True)
             
-        train_ds = Dataset(train_, data_root, transforms=get_train_transforms(), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
-        valid_ds = Dataset(valid_, data_root, transforms=get_valid_transforms(), output_label=True)
+        train_ds = Dataset(train_, data_root, transforms=get_transforms(), output_label=True)
+        valid_ds = Dataset(valid_, data_root, transforms=get_transforms(), output_label=True)
         
         train_loader = torch.utils.data.DataLoader(
             train_ds,
             batch_size=CFG['train_bs'],
+            num_workers=CFG['num_workers'],
             pin_memory=False,
             drop_last=False,
             shuffle=True,        
-            num_workers=CFG['num_workers'],
         )
         val_loader = torch.utils.data.DataLoader(
             valid_ds, 
             batch_size=CFG['valid_bs'],
             num_workers=CFG['num_workers'],
-            shuffle=False,
             pin_memory=False,
+            drop_last=False,
+            shuffle=True,  
         )
         return train_loader, val_loader
 
