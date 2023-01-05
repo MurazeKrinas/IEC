@@ -16,7 +16,6 @@ class EarlyStopping:
         """
         self.patience = patience
         self.delta = delta
-        self.isSaved = False
         self.counter = 0
         self.best_score = None
         self.early_stop = False
@@ -29,7 +28,6 @@ class EarlyStopping:
             self.best_score = score
             ExportPATH = f'./PTHModels/Resnet8_V4_fold{fold}.pth'
             torch.save(model, ExportPATH)
-            self.isSaved = True
         elif score > self.best_score + self.delta:
             self.counter += 1
             print(f'EarlyStopping counter: {self.counter} out of {self.patience}')
@@ -39,5 +37,4 @@ class EarlyStopping:
             self.best_score = score
             ExportPATH = f'./PTHModels/Resnet8_V4_fold{fold}.pth'
             torch.save(model, ExportPATH)
-            self.isSaved = True
             self.counter = 0

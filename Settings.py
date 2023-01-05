@@ -4,10 +4,10 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 import fnmatch
-import pycuda.driver as cuda
-import pycuda.autoinit
-import tensorrt as trt
-import timm
+#import pycuda.driver as cuda
+#import pycuda.autoinit
+#import tensorrt as trt
+#import timm
 import torch
 from torchvision import transforms
 from torchvision import datasets
@@ -53,7 +53,7 @@ CFG = {
     #'model_arch': 'Resmlp', #Operator not supported
     
     'type': np.float16,
-    'fold_num': 3,
+    'fold_num': 5,
     'seed': 719,
     'numclass': 4,
     'img_size': 224,
@@ -297,7 +297,7 @@ def EvalModel(isTrain, fold, epoch, model, loss_fn, val_loader, device, early_st
                 scheduler.step(loss_sum/sample_num)
             else:
                 scheduler.step()
-        return (image_preds_all==image_targets_all).mean()
+        return [(image_preds_all==image_targets_all).mean(), loss_sum/sample_num]
 
 def seed_everything(seed):
     random.seed(seed)
