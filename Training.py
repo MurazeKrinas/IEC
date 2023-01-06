@@ -12,7 +12,7 @@ if __name__ == '__main__':
     train = pd.read_csv('./Dataset/Train.csv')
     # SplitData()
     # train = pd.read_csv('./Dataset/MinimalTrainDataset.csv')
-    #print(valid.head())
+    # print(valid.head())
     seed_everything(CFG['seed'])
     folds = StratifiedKFold(n_splits=CFG['fold_num'], shuffle=True, random_state=CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
     print('Read file CSV successfully!')
@@ -20,6 +20,8 @@ if __name__ == '__main__':
     
     f = open("TrainingResult.txt","a")
     for fold, (trn_idx, val_idx) in enumerate(folds):
+        # if fold > 0:
+        #     break
         print(f'\n* Start training with fold {fold}...')
         print(f'* Length train and valid index: {len(trn_idx)} - {len(val_idx)}')
         print(f'* Batch size: {CFG["train_bs"]} \t Epochs: {CFG["epochs"]}')
@@ -49,7 +51,7 @@ if __name__ == '__main__':
                 TrainLoss.append(Train[1])
                 ValidAccuracy.append(Valid[0])
                 ValidLoss.append(Valid[1])
-                    
+                
                 if early_stopping.early_stop:
                     print('=> EARLY STOP! SAVED MODEL SUCCESSFULLY...')
                     EpochSaved = epoch - early_stopping.patience
@@ -68,3 +70,4 @@ if __name__ == '__main__':
                     f.write(f'=> Validating loss: {ValidLoss}\n')
                     f.write('\n\n--------------------------------------------\n\n')
                     break
+                
