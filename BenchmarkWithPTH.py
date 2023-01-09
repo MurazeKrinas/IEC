@@ -67,7 +67,6 @@ if __name__ == '__main__':
     for images in dataloader:    
         images,_ = next(iter(dataloader))
         images = images.to(device).float()
-
         with torch.no_grad():
             start = timeit.default_timer()
             torch.cuda.synchronize(device) 

@@ -1,13 +1,13 @@
-import setGPU
+#import setGPU
 import sklearn
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 import fnmatch
-#import pycuda.driver as cuda
-#import pycuda.autoinit
-#import tensorrt as trt
-#import timm
+import pycuda.driver as cuda
+import pycuda.autoinit
+import tensorrt as trt
+import timm
 import torch
 from torchvision import transforms
 from torchvision import datasets
@@ -53,7 +53,7 @@ CFG = {
     'numclass': 4,
     'img_size': 224,
     'epochs': 10000,
-    'batch_size': 2,
+    'batch_size': 1,
     'train_bs': 32,
     'valid_bs': 32,
     'T_0': 10,

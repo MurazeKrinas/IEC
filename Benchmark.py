@@ -62,7 +62,6 @@ if __name__ == '__main__':
     for Elm in dataloader:
         image,_ = next(iter(dataloader))
         image = image.numpy().astype(CFG['type'])
-
         print(f'\nStart validating iteration {num}: ')
         start = timeit.default_timer()
         pred = predict(image)
