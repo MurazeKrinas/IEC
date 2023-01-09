@@ -39,11 +39,5 @@ Then, update your pip packages to newest version: pip install pip --upgrade
   * pip3 install albumentations
   * pip3 install pycuda==2020.1 --user
 
-# Install tensorflow to work with TRT models
-  https://qengineering.eu/install-tensorflow-2.4.0-on-jetson-nano.html
-  
 # Loading and predicting with TRT Models
   https://github.com/NVIDIA/TensorRT/blob/main/quickstart/IntroNotebooks/4.%20Using%20PyTorch%20through%20ONNX.ipynb
-
-# Training model result
-https://colab.research.google.com/drive/1FeRDes8ffayT6VDFl8J3UIgn4VpsTQUV?usp=sharing
